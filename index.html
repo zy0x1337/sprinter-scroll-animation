@@ -13,40 +13,7 @@
   <section class="scroll-stage">
     <div class="sticky-canvas">
 
-      <!-- Van layer stack:
-           1. van-open   = van mit OFFENER Tür (sichtbar während Items einfliegen)
-           2. van-closed = van mit GESCHLOSSENER Tür (faded IN nach letztem Item)
-           Beide: mix-blend-mode:multiply → weißer Hintergrund unsichtbar -->
-      <div class="van-wrap">
-        <img class="van-layer van-open"
-             src="assets/van-open.png"
-             alt="Sprinter mit offener Tür"
-             id="vanOpen" />
-        <img class="van-layer van-closed"
-             src="assets/van-closed.png"
-             alt="Sprinter mit geschlossener Tür"
-             id="vanClosed" />
-      </div>
-
-      <!-- Flying items — mix-blend-mode:multiply entfernt weißen Hintergrund -->
-      <img class="item" id="item-box"
-           src="assets/ffd86333-6f20-4506-8271-2efcbda20c1b.png"
-           alt="Umzugskarton" />
-      <img class="item" id="item-sofa"
-           src="assets/d9764f57-70de-47d4-a7d7-39e5ba5cf440.png"
-           alt="Sofa" />
-      <img class="item" id="item-lamp"
-           src="assets/09d7fb8b-149d-4d3d-9e33-9b06fec8a980.png"
-           alt="Stehlampe" />
-      <img class="item" id="item-chair"
-           src="assets/7f84feaa-de48-4f8d-86a0-93c2c361b6ca.png"
-           alt="Stuhl" />
-      <img class="item" id="item-shelf"
-           src="assets/58f32273-3297-4f56-86c9-6925b1aab724.png"
-           alt="Regal" />
-      <img class="item" id="item-tv"
-           src="assets/14ab99e7-9ea5-412e-b452-ceb1ae9e204a.png"
-           alt="Fernseher" />
+      <canvas id="vanCanvas"></canvas>
 
       <!-- Scroll hint -->
       <div class="scroll-hint" id="scrollHint">
