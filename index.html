@@ -5,20 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sprinter Scroll Animation</title>
   <link rel="preconnect" href="https://api.fontshare.com" />
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Loading overlay -->
+  <div id="loadingOverlay">
+    <div class="load-inner">
+      <div class="load-label">Wird geladen <span id="loadPct">0%</span></div>
+      <div class="load-track"><div class="load-bar" id="loadBar"></div></div>
+    </div>
+  </div>
 
   <section class="scroll-stage">
     <div class="sticky-canvas">
       <canvas id="vanCanvas"></canvas>
 
+      <!-- Scene overlays: text appears at specific frame ranges -->
+
+      <!-- Scene 1: Frames 1–15 -->
+      <div class="scene-overlay scene-left" id="scene-1">
+        <span class="scene-label">Umzug leicht gemacht</span>
+        <h2 class="scene-headline">Ihr Spezialist für<br>Möbeltransporte.</h2>
+      </div>
+
+      <!-- Scene 2: Frames 20–38 -->
+      <div class="scene-overlay scene-right" id="scene-2">
+        <span class="scene-label">Schnell &amp; zuverlässig</span>
+        <h2 class="scene-headline">Pünktlich. Sicher.<br>Professionell.</h2>
+      </div>
+
+      <!-- Scene 3: Frames 42–60 -->
+      <div class="scene-overlay scene-left" id="scene-3">
+        <span class="scene-label">Ganz Hamburg</span>
+        <h2 class="scene-headline">Vom Keller bis<br>zur Haustür.</h2>
+      </div>
+
+      <!-- Scene 4: Frames 64–80 -->
+      <div class="scene-overlay scene-right" id="scene-4">
+        <span class="scene-label">Kein Stress</span>
+        <h2 class="scene-headline">Wir erledigen<br>alles für Sie.</h2>
+      </div>
+
+      <!-- Scene 5 + CTA: Frames 81–85 -->
+      <div class="scene-overlay scene-center" id="scene-5">
+        <span class="scene-label">Bereit?</span>
+        <h2 class="scene-headline">Ihr Umzug.<br>Unser Job.</h2>
+        <div class="cta-block" id="cta-block">
+          <a href="#" class="cta-btn">Jetzt anfragen</a>
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
       <div class="scroll-hint" id="scrollHint">
         <span class="scroll-hint-arrow">&#x2193;</span>
         <span class="scroll-hint-label">Scrollen</span>
       </div>
 
+      <!-- Progress bar -->
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
       </div>
