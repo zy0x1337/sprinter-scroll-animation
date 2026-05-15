@@ -3,73 +3,400 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sprinter Scroll Animation</title>
+  <title>Wohnungsauflösungen Wunstorf — Entrümpelung & Haushaltsauflösung</title>
+  <meta name="description" content="Professionelle Wohnungsauflösung, Haushaltsauflösung und Entrümpelung in Wunstorf und Umgebung. Kostenlose Besichtigung, zertifizierte Entsorgung, Wertausgleich." />
   <link rel="preconnect" href="https://api.fontshare.com" />
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    /* Index-specific: animation section fills viewport */
+    .animation-section {
+      position: relative;
+      height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
+        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
+        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
+        #d0d0d2;
+    }
+    /* Override body to allow scrolling on index page */
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: static;
+    }
+    /* The animation stage is now a section, not a fixed fullscreen */
+    .scroll-stage {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sticky-canvas {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      margin: auto;
+      background:
+        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
+        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
+        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
+        #d0d0d2;
+      container-type: size;
+    }
+    /* Contained within animation-section height */
+    @media (max-aspect-ratio: 16/9) {
+      .sticky-canvas { height: 100%; width: auto; max-width: 100vw; }
+    }
+    @media (min-aspect-ratio: 16/9) {
+      .sticky-canvas { width: 100%; height: auto; }
+    }
+    /* The scroll-for-animation region — sticky overlay approach */
+    .anim-sticky-outer {
+      height: 500vh; /* scrollable height for frame scrubbing */
+    }
+    .anim-sticky-inner {
+      position: sticky;
+      top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
+        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
+        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
+        #d0d0d2;
+    }
+  </style>
 </head>
-<body>
+<body class="page-body">
 
-  <!-- Loading overlay -->
-  <div id="loadingOverlay">
-    <div class="load-inner">
-      <div class="load-label">Wird geladen <span id="loadPct">0%</span></div>
-      <div class="load-track"><div class="load-bar" id="loadBar"></div></div>
-    </div>
+  <!-- Navigation -->
+  <nav class="site-nav" id="siteNav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-mark">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="9" width="16" height="6" rx="1.5" fill="#151412"/>
+          <rect x="1" y="5" width="10" height="5" rx="1" fill="#151412"/>
+          <circle cx="4.5" cy="15.5" r="1.5" fill="#f0c000"/>
+          <circle cx="13.5" cy="15.5" r="1.5" fill="#f0c000"/>
+        </svg>
+      </span>
+      <span>Stiebeiner&nbsp;Entrümpelung</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Start</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <a href="kontakt.html" class="nav-cta">Kostenlos anfragen</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav-drawer" id="navDrawer">
+    <ul>
+      <li><a href="index.html" class="active">Start</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <a href="kontakt.html" class="nav-cta">Kostenlos anfragen</a>
   </div>
 
-  <section class="scroll-stage">
-    <div class="sticky-canvas">
-      <canvas id="vanCanvas"></canvas>
+  <!-- ═══════════════════════════════════════
+       ANIMATION SECTION — sticky frame scrub
+  ═══════════════════════════════════════ -->
+  <div class="anim-sticky-outer" id="animOuter">
+    <div class="anim-sticky-inner">
 
-      <!-- Scene overlays: text appears at specific frame ranges -->
-
-      <!-- Scene 1: Frames 1–15 -->
-      <div class="scene-overlay scene-left" id="scene-1">
-        <span class="scene-label">Umzug leicht gemacht</span>
-        <h2 class="scene-headline">Ihr Spezialist für<br>Möbeltransporte.</h2>
-      </div>
-
-      <!-- Scene 2: Frames 20–38 -->
-      <div class="scene-overlay scene-right" id="scene-2">
-        <span class="scene-label">Schnell &amp; zuverlässig</span>
-        <h2 class="scene-headline">Pünktlich. Sicher.<br>Professionell.</h2>
-      </div>
-
-      <!-- Scene 3: Frames 42–60 -->
-      <div class="scene-overlay scene-left" id="scene-3">
-        <span class="scene-label">Ganz Hamburg</span>
-        <h2 class="scene-headline">Vom Keller bis<br>zur Haustür.</h2>
-      </div>
-
-      <!-- Scene 4: Frames 64–80 -->
-      <div class="scene-overlay scene-right" id="scene-4">
-        <span class="scene-label">Kein Stress</span>
-        <h2 class="scene-headline">Wir erledigen<br>alles für Sie.</h2>
-      </div>
-
-      <!-- Scene 5 + CTA: Frames 81–85 -->
-      <div class="scene-overlay scene-center" id="scene-5">
-        <span class="scene-label">Bereit?</span>
-        <h2 class="scene-headline">Ihr Umzug.<br>Unser Job.</h2>
-        <div class="cta-block" id="cta-block">
-          <a href="#" class="cta-btn">Jetzt anfragen</a>
+      <!-- Loading overlay -->
+      <div id="loadingOverlay" style="position:absolute;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at top left,#c0bebf 0%,transparent 60%),radial-gradient(ellipse at bottom right,#d6d6d8 0%,transparent 60%),radial-gradient(ellipse at bottom left,#e1e2e4 0%,transparent 60%),#d0d0d2;transition:opacity 0.6s ease;">
+        <div class="load-inner">
+          <div class="load-label" style="font-family:var(--font-body);">Wird geladen <span id="loadPct">0%</span></div>
+          <div class="load-track"><div class="load-bar" id="loadBar"></div></div>
         </div>
       </div>
 
-      <!-- Scroll hint -->
-      <div class="scroll-hint" id="scrollHint">
-        <span class="scroll-hint-arrow">&#x2193;</span>
-        <span class="scroll-hint-label">Scrollen</span>
-      </div>
+      <section class="scroll-stage" style="width:100%;height:100%;">
+        <div class="sticky-canvas">
+          <canvas id="vanCanvas"></canvas>
 
-      <!-- Progress bar -->
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+          <!-- Scene 1: Frames 1–15 -->
+          <div class="scene-overlay scene-left" id="scene-1">
+            <span class="scene-label">Wunstorf & Umgebung</span>
+            <h2 class="scene-headline">Schnell.<br>Diskret.<br>Besenrein.</h2>
+          </div>
+
+          <!-- Scene 2: Frames 20–38 -->
+          <div class="scene-overlay scene-right" id="scene-2">
+            <span class="scene-label">Zertifizierte Entsorgung</span>
+            <h2 class="scene-headline">Kein Objekt<br>zu groß.</h2>
+          </div>
+
+          <!-- Scene 3: Frames 42–60 -->
+          <div class="scene-overlay scene-left" id="scene-3">
+            <span class="scene-label">Wertausgleich möglich</span>
+            <h2 class="scene-headline">Was noch gut<br>ist, bleibt im<br>Kreislauf.</h2>
+          </div>
+
+          <!-- Scene 4: Frames 64–80 -->
+          <div class="scene-overlay scene-right" id="scene-4">
+            <span class="scene-label">Schlüsselübergabe-Service</span>
+            <h2 class="scene-headline">Sie müssen<br>nicht dabei<br>sein.</h2>
+          </div>
+
+          <!-- Scene 5 + CTA: Frames 81–85 -->
+          <div class="scene-overlay scene-center" id="scene-5">
+            <span class="scene-label">Kostenlose Besichtigung</span>
+            <h2 class="scene-headline">Ihr Auftrag.<br>Unsere Arbeit.</h2>
+            <div class="cta-block" id="cta-block">
+              <a href="kontakt.html" class="cta-btn">Jetzt anfragen &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Scroll hint -->
+          <div class="scroll-hint" id="scrollHint">
+            <span class="scroll-hint-arrow">&#x2193;</span>
+            <span class="scroll-hint-label">Scrollen</span>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- /ANIMATION -->
+
+  <!-- ═══════════════════════════════════════
+       BELOW FOLD — Leistungen
+  ═══════════════════════════════════════ -->
+  <div class="stripe-divider"></div>
+
+  <!-- USP dark band -->
+  <div class="dark-band">
+    <div class="usp-row">
+      <div class="usp-item reveal">
+        <div class="usp-num">100%</div>
+        <div class="usp-label">Kostenlose Besichtigung<br>& unverbindliches Angebot</div>
+      </div>
+      <div class="usp-item reveal reveal-delay-1">
+        <div class="usp-num">40+</div>
+        <div class="usp-label">Regionen in der<br>Region Hannover</div>
+      </div>
+      <div class="usp-item reveal reveal-delay-2">
+        <div class="usp-num">10+</div>
+        <div class="usp-label">Jahre Erfahrung in<br>Wohnungsauflösungen</div>
+      </div>
+      <div class="usp-item reveal reveal-delay-3">
+        <div class="usp-num">0€</div>
+        <div class="usp-label">Mehrkosten durch<br>Wertausgleich möglich</div>
       </div>
     </div>
-  </section>
+  </div>
+
+  <!-- Leistungen -->
+  <div class="section">
+    <p class="eyebrow reveal">Was wir anbieten</p>
+    <h2 class="section-heading reveal reveal-delay-1">Professionelle Entrümpelung<br>aus einer Hand</h2>
+    <p class="body-text reveal reveal-delay-2" style="margin-top:1rem;">
+      Ob Haushaltsauflösung nach einem Todesfall, Mietwohnungsräumung oder große Entrümpelung —
+      wir hinterlassen jeden Ort <strong>besenrein</strong> und kümmern uns um die fachgerechte Entsorgung.
+    </p>
+
+    <div class="service-grid">
+      <div class="service-item reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Wohnungsauflösung</div>
+          <div class="service-desc">Komplett-Räumung inkl. Besenreinigung — egal ob Mietwohnung oder Eigentum.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-1">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Haushaltsauflösung</div>
+          <div class="service-desc">Häuser, Resthöfe, Kellerbereiche, Dachböden — vollständig geräumt.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-2">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Entrümpelung</div>
+          <div class="service-desc">Keller, Garage, Schuppen, Gartenhaus — schnell und zügig beräumt.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-3">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Schwierige Fälle</div>
+          <div class="service-desc">Messie-Wohnungen, Mietnomaden — wir arbeiten diskret und professionell.</div>
+        </div>
+      </div>
+      <div class="service-item reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Wertausgleich</div>
+          <div class="service-desc">Noch verwertbare Möbel & Gegenstände reduzieren Ihre Kosten.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-1">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Schlüsselübergabe-Service</div>
+          <div class="service-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel & Rückgabe.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-2">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Altmetall & Schrottabholung</div>
+          <div class="service-desc">Fachgerechte Entsorgung von Altmetall durch zertifizierte Partner.</div>
+        </div>
+      </div>
+      <div class="service-item reveal reveal-delay-3">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="service-title">Zertifizierte Entsorgung</div>
+          <div class="service-desc">Zusammenarbeit mit geprüften Entsorgungsfachbetrieben und Kill-Tec.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Einzugsgebiet -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="section">
+      <p class="eyebrow reveal">Einzugsgebiet</p>
+      <h2 class="section-heading reveal reveal-delay-1">In Ihrer Nähe</h2>
+      <p class="body-text reveal reveal-delay-2" style="margin-top:0.75rem;">
+        Wir sind in Wunstorf und der gesamten Region Hannover für Sie im Einsatz.
+      </p>
+      <div class="region-grid reveal reveal-delay-2">
+        <span class="region-chip">Wunstorf</span>
+        <span class="region-chip">Barsinghausen</span>
+        <span class="region-chip">Bad Nenndorf</span>
+        <span class="region-chip">Garbsen</span>
+        <span class="region-chip">Neustadt a. Rbge.</span>
+        <span class="region-chip">Mardorf</span>
+        <span class="region-chip">Bad Rehburg</span>
+        <span class="region-chip">Rehburg-Loccum</span>
+        <span class="region-chip">Hohnhorst</span>
+        <span class="region-chip">Hannover</span>
+        <span class="region-chip">Steinhude</span>
+        <span class="region-chip">Hagenburg</span>
+        <span class="region-chip">Stadthagen</span>
+        <span class="region-chip">Ronnenberg</span>
+        <span class="region-chip">Berenbostel</span>
+        <span class="region-chip">Luthe</span>
+        <span class="region-chip">Poggenhagen</span>
+        <span class="region-chip">Bordenau</span>
+        <span class="region-chip">Eilvese</span>
+        <span class="region-chip">Mariensee</span>
+        <span class="region-chip">Bokeloh</span>
+        <span class="region-chip">Blumenau</span>
+        <span class="region-chip">Winzlar</span>
+        <span class="region-chip">& alle Umgemeinden</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA band -->
+  <div class="dark-band">
+    <div class="section" style="text-align:center;">
+      <p class="eyebrow reveal" style="justify-content:center;">Kostenlos & unverbindlich</p>
+      <h2 class="display-heading reveal reveal-delay-1" style="color:var(--text-inv);margin-bottom:1.5rem;">Jetzt Besichtigung vereinbaren</h2>
+      <p class="body-text reveal reveal-delay-2" style="margin:0 auto 2rem;color:rgba(245,244,240,0.55);">
+        Rufen Sie uns an oder schreiben Sie uns — wir melden uns innerhalb von 24 Stunden.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" class="reveal reveal-delay-3">
+        <a href="tel:015150194741" style="display:inline-flex;align-items:center;gap:0.6rem;background:var(--accent);color:var(--accent-text);font-family:var(--font-display);font-size:0.95rem;font-weight:600;padding:0.85rem 1.75rem;border-radius:var(--radius-sm);transition:background 0.18s ease;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 2.22 2 2 0 0 1 3.6.04h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          0151 / 501 94 741
+        </a>
+        <a href="kontakt.html" style="display:inline-flex;align-items:center;gap:0.6rem;background:rgba(255,255,255,0.08);color:var(--text-inv);font-family:var(--font-display);font-size:0.95rem;font-weight:600;padding:0.85rem 1.75rem;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.15);transition:background 0.18s ease;">
+          Online anfragen &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>&copy; 2025 Jens Stiebeiner — Wohnungsauflösungen Wunstorf</span>
+    <div class="footer-links">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </footer>
 
   <script src="animation.js"></script>
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('siteNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Hamburger
+    const ham = document.getElementById('navHamburger');
+    const drawer = document.getElementById('navDrawer');
+    ham.addEventListener('click', () => {
+      ham.classList.toggle('open');
+      drawer.classList.toggle('open');
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
