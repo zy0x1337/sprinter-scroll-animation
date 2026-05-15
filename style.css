@@ -1,24 +1,29 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
+html, body {
   width: 100%;
+  height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 body {
   font-family: 'Satoshi', system-ui, sans-serif;
   background: #f5f3ee;
   color: #222;
-  width: 100%;
-  overflow: hidden;
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* ── Sticky scroll stage ─────────────────────────────────── */
 .scroll-stage {
-  height: 100vh;
-  position: relative;
   width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .sticky-canvas {
@@ -26,7 +31,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   background: #f5f3ee;
 }
@@ -40,10 +45,12 @@ body {
   display: block;
 }
 
-/* ── Outro (erscheint nach Animation) ────────────────────── */
+/* ── Outro ─────────────────────────────────────────────── */
 .outro {
   display: none;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -51,9 +58,6 @@ body {
   background: #f5f3ee;
   gap: 1rem;
   padding: 2rem;
-  position: fixed;
-  inset: 0;
-  z-index: 20;
   opacity: 0;
   transition: opacity 0.6s ease;
 }
