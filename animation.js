@@ -1,26 +1,31 @@
 /**
  * Sprinter Scroll Animation — Frame Scrubbing
- * 57 frames → scroll-driven, hijacked during animation
+ * 57 frames → virtual scroll, fully hijacked
  */
 
 const TOTAL_FRAMES = 57;
+const SCROLL_MAX   = 3000;
 const FRAME_PATH   = (n) => `assets/ezgif-frame-${String(n).padStart(3, '0')}.jpg`;
 
-const canvas  = document.getElementById('vanCanvas');
-const ctx     = canvas.getContext('2d');
-const stage   = document.querySelector('.scroll-stage');
-const hint    = document.getElementById('scrollHint');
-const fill    = document.getElementById('progressFill');
-const outro   = document.getElementById('outro');
+const canvas = document.getElementById('vanCanvas');
+const ctx    = canvas.getContext('2d');
+const hint   = document.getElementById('scrollHint');
+const fill   = document.getElementById('progressFill');
+const outro  = document.getElementById('outro');
 
 // ── Preload ──────────────────────────────────────────────
 const frames = [];
-let  loaded  = 0;
+let loaded = 0;
 
 function onAllLoaded() {
   resizeCanvas();
-  initScrollHijack();
   window.addEventListener('resize', resizeCanvas);
+
+  // Alle Scroll-Events auf document abfangen, passive:false = preventDefault möglich
+  document.addEventListener('wheel',      onWheel,      { passive: false, capture: true });
+  document.addEventListener('touchstart', onTouchStart, { passive: true,  capture: true });
+  document.addEventListener('touchmove',  onTouchMove,  { passive: false, capture: true });
+  document.addEventListener('keydown',    onKeyDown,    { capture: true });
 }
 
 for (let i = 1; i <= TOTAL_FRAMES; i++) {
@@ -55,7 +60,6 @@ function drawFrame(index) {
   const x = (cw - w) / 2;
   const y = (ch - h) / 2;
 
-  // Frame zeichnen mit clip
   const pad = 32;
   ctx.save();
   ctx.beginPath();
@@ -64,31 +68,27 @@ function drawFrame(index) {
   ctx.drawImage(img, x, y, w, h);
   ctx.restore();
 
-  // Vignette über dem Frame (blend in Hintergrundfarbe)
-  const vx = x + pad, vy = y + pad, vw = w - pad*2, vh2 = h - pad*2;
+  const vx = x + pad, vy = y + pad, vw = w - pad*2, vh = h - pad*2;
   const bg0 = '#f5f3ee', bg1 = 'rgba(245,243,238,0)';
-
-  const gT = ctx.createLinearGradient(0, vy,        0, vy + vh2 * 0.2);  gT.addColorStop(0, bg0); gT.addColorStop(1, bg1);
-  const gB = ctx.createLinearGradient(0, vy + vh2,  0, vy + vh2 * 0.8);  gB.addColorStop(0, bg0); gB.addColorStop(1, bg1);
-  const gL = ctx.createLinearGradient(vx,        0, vx + vw * 0.15, 0);  gL.addColorStop(0, bg0); gL.addColorStop(1, bg1);
-  const gR = ctx.createLinearGradient(vx + vw,   0, vx + vw * 0.85, 0);  gR.addColorStop(0, bg0); gR.addColorStop(1, bg1);
-
-  ctx.fillStyle = gT; ctx.fillRect(vx, vy,           vw, vh2 * 0.2);
-  ctx.fillStyle = gB; ctx.fillRect(vx, vy + vh2*0.8, vw, vh2 * 0.2);
-  ctx.fillStyle = gL; ctx.fillRect(vx, vy,           vw * 0.15, vh2);
-  ctx.fillStyle = gR; ctx.fillRect(vx + vw*0.85, vy, vw * 0.15, vh2);
+  const gT = ctx.createLinearGradient(0, vy,       0, vy + vh*0.2);    gT.addColorStop(0, bg0); gT.addColorStop(1, bg1);
+  const gB = ctx.createLinearGradient(0, vy + vh,  0, vy + vh*0.8);    gB.addColorStop(0, bg0); gB.addColorStop(1, bg1);
+  const gL = ctx.createLinearGradient(vx,      0,  vx + vw*0.15, 0);   gL.addColorStop(0, bg0); gL.addColorStop(1, bg1);
+  const gR = ctx.createLinearGradient(vx + vw, 0,  vx + vw*0.85, 0);   gR.addColorStop(0, bg0); gR.addColorStop(1, bg1);
+  ctx.fillStyle = gT; ctx.fillRect(vx, vy,           vw, vh*0.2);
+  ctx.fillStyle = gB; ctx.fillRect(vx, vy + vh*0.8,  vw, vh*0.2);
+  ctx.fillStyle = gL; ctx.fillRect(vx, vy,            vw*0.15, vh);
+  ctx.fillStyle = gR; ctx.fillRect(vx + vw*0.85, vy,  vw*0.15, vh);
 }
 
-// ── Virtual Scroll ─────────────────────────────────────────
-let virtualScroll = 0;
-let hintHidden    = false;
-let outroShown    = false;
-let ticking       = false;
-let touchStartY   = 0;
-const SCROLL_MAX  = 3000; // px virtueller Scroll-Bereich
+// ── Virtual Scroll State ─────────────────────────────────
+let vScroll     = 0;
+let hintHidden  = false;
+let outroShown  = false;
+let ticking     = false;
+let touchStartY = 0;
 
 function getProgress() {
-  return Math.min(1, Math.max(0, virtualScroll / SCROLL_MAX));
+  return Math.min(1, Math.max(0, vScroll / SCROLL_MAX));
 }
 
 function currentFrameIndex() {
@@ -97,21 +97,20 @@ function currentFrameIndex() {
 
 function update() {
   ticking = false;
-  const progress = getProgress();
-  fill.style.width = `${progress * 100}%`;
+  const p = getProgress();
+  fill.style.width = `${p * 100}%`;
   drawFrame(currentFrameIndex());
 
-  if (!hintHidden && virtualScroll > 20) {
+  if (!hintHidden && vScroll > 20) {
     hint.classList.add('hidden');
     hintHidden = true;
   }
 
-  // Outro einblenden wenn Animation fertig
-  if (progress >= 1 && !outroShown) {
+  if (p >= 1 && !outroShown) {
     outroShown = true;
     outro.style.display = 'flex';
     requestAnimationFrame(() => outro.classList.add('visible'));
-  } else if (progress < 1 && outroShown) {
+  } else if (p < 0.98 && outroShown) {
     outroShown = false;
     outro.classList.remove('visible');
     setTimeout(() => { if (!outroShown) outro.style.display = 'none'; }, 600);
@@ -119,33 +118,30 @@ function update() {
 }
 
 function nudge(delta) {
-  virtualScroll = Math.min(SCROLL_MAX, Math.max(0, virtualScroll + delta));
+  vScroll = Math.min(SCROLL_MAX, Math.max(0, vScroll + delta));
   if (!ticking) { requestAnimationFrame(update); ticking = true; }
 }
 
-function initScrollHijack() {
-  document.body.style.overflow = 'hidden';
+// ── Event Handlers ───────────────────────────────────────
+function onWheel(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  nudge(e.deltaY * 1.2);
+}
 
-  window.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    nudge(e.deltaY * 1.2);
-  }, { passive: false });
+function onTouchStart(e) {
+  touchStartY = e.touches[0].clientY;
+}
 
-  window.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+function onTouchMove(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const dy = touchStartY - e.touches[0].clientY;
+  touchStartY = e.touches[0].clientY;
+  nudge(dy * 2.5);
+}
 
-  window.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const dy = touchStartY - e.touches[0].clientY;
-    touchStartY = e.touches[0].clientY;
-    nudge(dy * 2.5);
-  }, { passive: false });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); nudge(80); }
-    if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); nudge(-80); }
-  });
-
-  update();
+function onKeyDown(e) {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); nudge(80); }
+  if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); nudge(-80); }
 }
