@@ -11,6 +11,7 @@ const ctx     = canvas.getContext('2d');
 const stage   = document.querySelector('.scroll-stage');
 const hint    = document.getElementById('scrollHint');
 const fill    = document.getElementById('progressFill');
+const outro   = document.getElementById('outro');
 
 // ── Preload ──────────────────────────────────────────────
 const frames = [];
@@ -48,66 +49,50 @@ function drawFrame(index) {
 
   ctx.clearRect(0, 0, cw, ch);
 
-  // Contain: vollständiger Frame sichtbar, zentriert
   const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
   const w = img.naturalWidth  * scale;
   const h = img.naturalHeight * scale;
   const x = (cw - w) / 2;
   const y = (ch - h) / 2;
 
-  // Weiche Kanten: radial gradient mask via compositing
+  // Frame zeichnen mit clip
+  const pad = 32;
   ctx.save();
-
-  // Clip mit abgerundeten Rändern + soft vignette
-  const pad = 32; // soft inset
   ctx.beginPath();
   ctx.roundRect(x + pad, y + pad, w - pad*2, h - pad*2, 0);
   ctx.clip();
   ctx.drawImage(img, x, y, w, h);
   ctx.restore();
 
-  // Vignette über dem Frame
+  // Vignette über dem Frame (blend in Hintergrundfarbe)
   const vx = x + pad, vy = y + pad, vw = w - pad*2, vh2 = h - pad*2;
-  const gTop    = ctx.createLinearGradient(0, vy, 0, vy + vh2 * 0.18);
-  gTop.addColorStop(0,   '#f5f3ee');
-  gTop.addColorStop(1,   'rgba(245,243,238,0)');
-  const gBottom = ctx.createLinearGradient(0, vy + vh2, 0, vy + vh2 * 0.82);
-  gBottom.addColorStop(0,   '#f5f3ee');
-  gBottom.addColorStop(1,   'rgba(245,243,238,0)');
-  const gLeft   = ctx.createLinearGradient(vx, 0, vx + vw * 0.12, 0);
-  gLeft.addColorStop(0,   '#f5f3ee');
-  gLeft.addColorStop(1,   'rgba(245,243,238,0)');
-  const gRight  = ctx.createLinearGradient(vx + vw, 0, vx + vw * 0.88, 0);
-  gRight.addColorStop(0,   '#f5f3ee');
-  gRight.addColorStop(1,   'rgba(245,243,238,0)');
+  const bg0 = '#f5f3ee', bg1 = 'rgba(245,243,238,0)';
 
-  ctx.fillStyle = gTop;    ctx.fillRect(vx, vy, vw, vh2 * 0.18);
-  ctx.fillStyle = gBottom; ctx.fillRect(vx, vy + vh2 * 0.82, vw, vh2 * 0.18);
-  ctx.fillStyle = gLeft;   ctx.fillRect(vx, vy, vw * 0.12, vh2);
-  ctx.fillStyle = gRight;  ctx.fillRect(vx + vw * 0.88, vy, vw * 0.12, vh2);
+  const gT = ctx.createLinearGradient(0, vy,        0, vy + vh2 * 0.2);  gT.addColorStop(0, bg0); gT.addColorStop(1, bg1);
+  const gB = ctx.createLinearGradient(0, vy + vh2,  0, vy + vh2 * 0.8);  gB.addColorStop(0, bg0); gB.addColorStop(1, bg1);
+  const gL = ctx.createLinearGradient(vx,        0, vx + vw * 0.15, 0);  gL.addColorStop(0, bg0); gL.addColorStop(1, bg1);
+  const gR = ctx.createLinearGradient(vx + vw,   0, vx + vw * 0.85, 0);  gR.addColorStop(0, bg0); gR.addColorStop(1, bg1);
+
+  ctx.fillStyle = gT; ctx.fillRect(vx, vy,           vw, vh2 * 0.2);
+  ctx.fillStyle = gB; ctx.fillRect(vx, vy + vh2*0.8, vw, vh2 * 0.2);
+  ctx.fillStyle = gL; ctx.fillRect(vx, vy,           vw * 0.15, vh2);
+  ctx.fillStyle = gR; ctx.fillRect(vx + vw*0.85, vy, vw * 0.15, vh2);
 }
 
-// ── Scroll Hijack ─────────────────────────────────────────
-// Konvertiert Wheel/Touch in kontrollierten "virtuellen" Scroll
-// der nur innerhalb der Stage wirkt — kein echter Page-Scroll
+// ── Virtual Scroll ─────────────────────────────────────────
 let virtualScroll = 0;
 let hintHidden    = false;
+let outroShown    = false;
 let ticking       = false;
 let touchStartY   = 0;
+const SCROLL_MAX  = 3000; // px virtueller Scroll-Bereich
 
 function getProgress() {
-  const stageH = stage.offsetHeight;
-  const vh     = window.innerHeight;
-  return Math.min(1, Math.max(0, virtualScroll / (stageH - vh)));
+  return Math.min(1, Math.max(0, virtualScroll / SCROLL_MAX));
 }
 
 function currentFrameIndex() {
   return Math.min(TOTAL_FRAMES - 1, Math.floor(getProgress() * TOTAL_FRAMES));
-}
-
-function isInStage() {
-  const rect = stage.getBoundingClientRect();
-  return rect.top <= 0 && rect.bottom > window.innerHeight;
 }
 
 function update() {
@@ -120,46 +105,47 @@ function update() {
     hint.classList.add('hidden');
     hintHidden = true;
   }
+
+  // Outro einblenden wenn Animation fertig
+  if (progress >= 1 && !outroShown) {
+    outroShown = true;
+    outro.style.display = 'flex';
+    requestAnimationFrame(() => outro.classList.add('visible'));
+  } else if (progress < 1 && outroShown) {
+    outroShown = false;
+    outro.classList.remove('visible');
+    setTimeout(() => { if (!outroShown) outro.style.display = 'none'; }, 600);
+  }
 }
 
 function nudge(delta) {
-  const maxScroll = stage.offsetHeight - window.innerHeight;
-  virtualScroll = Math.min(maxScroll, Math.max(0, virtualScroll + delta));
+  virtualScroll = Math.min(SCROLL_MAX, Math.max(0, virtualScroll + delta));
   if (!ticking) { requestAnimationFrame(update); ticking = true; }
 }
 
 function initScrollHijack() {
-  // Wheel: hijack nur wenn Stage aktiv
+  document.body.style.overflow = 'hidden';
+
   window.addEventListener('wheel', (e) => {
-    if (!isInStage()) return;
     e.preventDefault();
     nudge(e.deltaY * 1.2);
   }, { passive: false });
 
-  // Touch
   window.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
   window.addEventListener('touchmove', (e) => {
-    if (!isInStage()) return;
     e.preventDefault();
     const dy = touchStartY - e.touches[0].clientY;
     touchStartY = e.touches[0].clientY;
     nudge(dy * 2.5);
   }, { passive: false });
 
-  // Keyboard arrows
   window.addEventListener('keydown', (e) => {
-    if (!isInStage()) return;
     if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); nudge(80); }
     if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); nudge(-80); }
   });
 
-  // Body: kein echter Scroll mehr
-  document.body.style.overflow = 'hidden';
-
-  // Stage-Höhe als echter DOM-Spacer damit die Seite "scrollbar" wirkt
-  // aber wir steuern virtualScroll manuell
   update();
 }
