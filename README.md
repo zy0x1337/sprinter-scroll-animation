@@ -6,21 +6,8 @@ Scroll-driven animation of a white Sprinter van being loaded with household item
 
 - **Sticky scroll**: page scrolls but viewport stays fixed
 - **Scroll progress** (0–100%) drives the animation timeline
-- **Assets**: AI-generated PNGs (transparent background) via Nano Banana 2
-- Items "fly" from off-screen into the open rear door of the van
-
-## Assets needed
-
-| File | Description |
-|------|-------------|
-| `assets/van-base.png` | White Sprinter van, rear view, rear doors open, transparent BG |
-| `assets/van-doors-closed.png` | Same van, rear doors closed |
-| `assets/item-sofa.png` | Old sofa / couch |
-| `assets/item-lamp.png` | Floor lamp |
-| `assets/item-box.png` | Cardboard moving box |
-| `assets/item-chair.png` | Old wooden chair |
-| `assets/item-shelf.png` | Small bookshelf |
-| `assets/item-tv.png` | Old CRT or flat TV |
+- **Frame scrubbing**: 57 JPEG frames extracted from video → mapped to scroll position via Canvas
+- Smooth cover-fit rendering, progress bar, scroll hint
 
 ## Project Structure
 
@@ -29,14 +16,9 @@ Scroll-driven animation of a white Sprinter van being loaded with household item
 ├── index.html
 ├── style.css
 ├── animation.js
+├── vercel.json
 └── assets/
-    ├── van-base.png
-    ├── item-sofa.png
-    ├── item-lamp.png
-    ├── item-box.png
-    ├── item-chair.png
-    ├── item-shelf.png
-    └── item-tv.png
+    └── ezgif-frame-001.jpg … ezgif-frame-057.jpg
 ```
 
 ## Setup
