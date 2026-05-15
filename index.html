@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprinter Scroll Animation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Hero above animation -->
+  <section class="hero">
+    <h1>Entrümpelung & Wohnungsauflösung</h1>
+    <p>Scroll down to load the van</p>
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <!-- Sticky scroll container -->
+  <section class="scroll-stage">
+    <div class="sticky-canvas">
+
+      <!-- Van base image -->
+      <img class="van-base" src="assets/van-base.png" alt="Weißer Transporter" />
+
+      <!-- Flying items (initially off-screen) -->
+      <img class="item" id="item-box"    src="assets/item-box.png"    alt="Umzugskarton" />
+      <img class="item" id="item-sofa"   src="assets/item-sofa.png"   alt="Sofa" />
+      <img class="item" id="item-lamp"   src="assets/item-lamp.png"   alt="Stehlampe" />
+      <img class="item" id="item-chair"  src="assets/item-chair.png"  alt="Stuhl" />
+      <img class="item" id="item-shelf"  src="assets/item-shelf.png"  alt="Regal" />
+      <img class="item" id="item-tv"     src="assets/item-tv.png"     alt="Fernseher" />
+
+      <!-- Scroll progress bar -->
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    </div>
+  </section>
+
+  <!-- Content below animation -->
+  <section class="outro">
+    <h2>Fertig! Alles eingeladen. 🚐</h2>
+    <p>Professionelle Entrümpelung – schnell, sauber, zuverlässig.</p>
+  </section>
+
+  <script src="animation.js"></script>
+</body>
+</html>
