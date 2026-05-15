@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sprinter Scroll Animation</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,13 +13,22 @@
   <section class="scroll-stage">
     <div class="sticky-canvas">
 
-      <!-- Van -->
-      <img class="van-base"
-           src="assets/17e48e3f-601d-48ab-9cdb-7b3872942227.png"
-           alt="Weißer Sprinter Transporter"
-           width="700" height="303" loading="eager" />
+      <!-- Van layer stack:
+           1. van-open   = van mit OFFENER Tür (sichtbar während Items einfliegen)
+           2. van-closed = van mit GESCHLOSSENER Tür (faded IN nach letztem Item)
+           Beide: mix-blend-mode:multiply → weißer Hintergrund unsichtbar -->
+      <div class="van-wrap">
+        <img class="van-layer van-open"
+             src="assets/van-open.png"
+             alt="Sprinter mit offener Tür"
+             id="vanOpen" />
+        <img class="van-layer van-closed"
+             src="assets/van-closed.png"
+             alt="Sprinter mit geschlossener Tür"
+             id="vanClosed" />
+      </div>
 
-      <!-- Flying items -->
+      <!-- Flying items — mix-blend-mode:multiply entfernt weißen Hintergrund -->
       <img class="item" id="item-box"
            src="assets/ffd86333-6f20-4506-8271-2efcbda20c1b.png"
            alt="Umzugskarton" />
@@ -50,7 +61,8 @@
   </section>
 
   <section class="outro">
-    <h2>Fertig! Alles eingeladen. 🚐</h2>
+    <div class="outro-icon">🚐</div>
+    <h2>Fertig! Alles eingeladen.</h2>
     <p>Professionelle Entrümpelung – schnell, sauber, zuverlässig.</p>
   </section>
 
