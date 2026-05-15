@@ -1,28 +1,27 @@
 /**
- * Sprinter Scroll Animation — Frame Scrubbing
+ * Sprinter Scroll Animation — Native Sticky-Scroll Frame Scrubbing
  * 85 frames à 1280×720 (16:9 JPEG)
- * Canvas is capped at native resolution to avoid upscale blur.
+ * Uses native page scroll (no virtual scroll) so the page can continue below.
  */
 
 const TOTAL_FRAMES = 85;
-const SCROLL_MAX   = 5000;
 const FRAME_PATH   = (n) => `assets/ezgif-frame-${String(n).padStart(3, '0')}.jpg`;
-
-const canvas = document.getElementById('vanCanvas');
-const ctx    = canvas.getContext('2d');
-const hint   = document.getElementById('scrollHint');
-const fill   = document.getElementById('progressFill');
-
 const NATIVE_W = 1280;
 const NATIVE_H = 720;
 
-// ── Scene definitions: frame ranges (1-indexed) ──────────────
+const canvas = document.getElementById('vanCanvas');
+if (!canvas) throw new Error('No #vanCanvas found');
+const ctx  = canvas.getContext('2d');
+const hint = document.getElementById('scrollHint');
+const fill = document.getElementById('progressFill');
+
+// ── Scene definitions: frame ranges (1-indexed) ──────────
 const SCENES = [
-  { start: 1,  end: 15,  id: 'scene-1' },
-  { start: 20, end: 38,  id: 'scene-2' },
-  { start: 42, end: 60,  id: 'scene-3' },
-  { start: 64, end: 80,  id: 'scene-4' },
-  { start: 81, end: 85,  id: 'scene-5' },
+  { start: 1,  end: 15, id: 'scene-1' },
+  { start: 20, end: 38, id: 'scene-2' },
+  { start: 42, end: 60, id: 'scene-3' },
+  { start: 64, end: 80, id: 'scene-4' },
+  { start: 81, end: 85, id: 'scene-5' },
 ];
 
 // ── Preload ───────────────────────────────────────────────
@@ -30,97 +29,82 @@ const frames = [];
 let loaded = 0;
 
 function onAllLoaded() {
-  const loadingEl = document.getElementById('loadingOverlay');
-  if (loadingEl) {
-    loadingEl.style.opacity = '0';
-    setTimeout(() => loadingEl.remove(), 600);
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 650);
   }
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  document.addEventListener('wheel',      onWheel,      { passive: false, capture: true });
-  document.addEventListener('touchstart', onTouchStart, { passive: true,  capture: true });
-  document.addEventListener('touchmove',  onTouchMove,  { passive: false, capture: true });
-  document.addEventListener('keydown',    onKeyDown,    { capture: true });
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+  window.addEventListener('scroll', onScroll,     { passive: true });
   drawFrame(0);
+  onScroll(); // sync immediately
 }
 
 for (let i = 1; i <= TOTAL_FRAMES; i++) {
   const img = new Image();
   img.src = FRAME_PATH(i);
-  img.onload = () => {
-    loaded++;
-    const pct = loaded / TOTAL_FRAMES;
-    fill.style.width = `${pct * 100}%`;
-    const loadBar = document.getElementById('loadBar');
-    if (loadBar) loadBar.style.width = `${pct * 100}%`;
-    const loadPct = document.getElementById('loadPct');
-    if (loadPct) loadPct.textContent = `${Math.round(pct * 100)}%`;
-    if (loaded === TOTAL_FRAMES) onAllLoaded();
-  };
-  img.onerror = () => { loaded++; if (loaded === TOTAL_FRAMES) onAllLoaded(); };
+  img.onload  = () => { loaded++; updateLoadUI(); if (loaded === TOTAL_FRAMES) onAllLoaded(); };
+  img.onerror = () => { loaded++; updateLoadUI(); if (loaded === TOTAL_FRAMES) onAllLoaded(); };
   frames.push(img);
 }
 
-// ── Canvas sizing ────────────────────────────────────────
-/*
- * We draw at the DISPLAY size of the canvas element (CSS pixels),
- * but multiply by devicePixelRatio only up to the native frame size.
- * This avoids retina upscaling beyond 1280×720.
- */
+function updateLoadUI() {
+  const pct = loaded / TOTAL_FRAMES;
+  const bar = document.getElementById('loadBar');
+  const num = document.getElementById('loadPct');
+  if (bar) bar.style.width  = `${pct * 100}%`;
+  if (num) num.textContent  = `${Math.round(pct * 100)}%`;
+  if (fill) fill.style.width = `${pct * 100}%`;
+}
+
+// ── Canvas sizing ─────────────────────────────────────────
 function resizeCanvas() {
-  const dpr      = window.devicePixelRatio || 1;
-  const cssW     = canvas.offsetWidth;
-  const cssH     = canvas.offsetHeight;
-
-  // Physical pixels requested, capped at native frame resolution
-  const physW    = Math.min(Math.round(cssW * dpr), NATIVE_W);
-  const physH    = Math.min(Math.round(cssH * dpr), NATIVE_H);
-
-  canvas.width   = physW;
-  canvas.height  = physH;
-
-  // Transform: map CSS pixels to physical pixels (capped scale)
-  const scaleX = physW / cssW;
-  const scaleY = physH / cssH;
-  ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
-
+  const dpr  = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth;
+  const cssH = canvas.offsetHeight;
+  const physW = Math.min(Math.round(cssW * dpr), NATIVE_W);
+  const physH = Math.min(Math.round(cssH * dpr), NATIVE_H);
+  canvas.width  = physW;
+  canvas.height = physH;
+  ctx.setTransform(physW / cssW, 0, 0, physH / cssH, 0, 0);
   drawFrame(currentFrameIndex());
 }
 
-// ── Draw ────────────────────────────────────────────────
+// ── Draw ──────────────────────────────────────────────────
 function drawFrame(index) {
-  const img = frames[index];
+  const img = frames[Math.max(0, Math.min(index, frames.length - 1))];
   if (!img?.complete || !img.naturalWidth) return;
   const cw = canvas.offsetWidth;
   const ch = canvas.offsetHeight;
-
-  // Object-fit: contain — show full frame, no cropping
-  // The canvas aspect already matches 16:9 so this is effectively fill
   const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
   const w = img.naturalWidth  * scale;
   const h = img.naturalHeight * scale;
-  const x = (cw - w) / 2;
-  const y = (ch - h) / 2;
-
   ctx.clearRect(0, 0, cw, ch);
-  ctx.drawImage(img, x, y, w, h);
+  ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
 }
 
-// ── Virtual Scroll State ────────────────────────────────
-let vScroll    = 0;
-let hintHidden = false;
-let ticking    = false;
-let touchStartY = 0;
-
-function getProgress() {
-  return Math.min(1, Math.max(0, vScroll / SCROLL_MAX));
+// ── Scroll Progress from DOM ──────────────────────────────
+// The outer .anim-sticky-outer element defines the scroll range.
+// Progress = how far we've scrolled through it (0 → 1).
+function getScrollProgress() {
+  const outer = document.getElementById('animOuter');
+  if (!outer) return 0;
+  const rect       = outer.getBoundingClientRect();
+  const navH       = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64;
+  const visStart   = navH;           // top of viewport below nav
+  const trackLen   = outer.offsetHeight - window.innerHeight + navH;
+  // scrolled distance into the outer = -(rect.top - visStart)
+  const scrolled   = -(rect.top - visStart);
+  return Math.max(0, Math.min(1, scrolled / Math.max(1, trackLen)));
 }
 
 function currentFrameIndex() {
-  return Math.min(TOTAL_FRAMES - 1, Math.floor(getProgress() * TOTAL_FRAMES));
+  const p = getScrollProgress();
+  return Math.min(TOTAL_FRAMES - 1, Math.floor(p * TOTAL_FRAMES));
 }
 
-// ── Overlay logic ───────────────────────────────────────
+// ── Overlay logic ─────────────────────────────────────────
 function updateOverlays(frameIndex) {
   const frame1 = frameIndex + 1;
   let activeScene = null;
@@ -136,39 +120,19 @@ function updateOverlays(frameIndex) {
   if (cta) cta.classList.toggle('visible', !!(activeScene && activeScene.id === 'scene-5'));
 }
 
-function update() {
-  ticking = false;
-  const p  = getProgress();
-  fill.style.width = `${p * 100}%`;
-  const fi = currentFrameIndex();
-  drawFrame(fi);
-  updateOverlays(fi);
-  if (!hintHidden && vScroll > 20) {
-    hint.classList.add('hidden');
-    hintHidden = true;
-  }
-}
-
-function nudge(delta) {
-  vScroll = Math.min(SCROLL_MAX, Math.max(0, vScroll + delta));
-  if (!ticking) { requestAnimationFrame(update); ticking = true; }
-}
-
-// ── Event Handlers ──────────────────────────────────────
-function onWheel(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  nudge(e.deltaY * 1.2);
-}
-function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
-function onTouchMove(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  const dy = touchStartY - e.touches[0].clientY;
-  touchStartY = e.touches[0].clientY;
-  nudge(dy * 2.5);
-}
-function onKeyDown(e) {
-  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); nudge(100); }
-  if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); nudge(-100); }
+// ── Main scroll handler ───────────────────────────────────
+let ticking = false;
+function onScroll() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    const p  = getScrollProgress();
+    if (fill) fill.style.width = `${p * 100}%`;
+    const fi = currentFrameIndex();
+    drawFrame(fi);
+    updateOverlays(fi);
+    // Hide scroll hint once user starts scrolling
+    if (hint && p > 0.01) hint.classList.add('hidden');
+  });
 }

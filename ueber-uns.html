@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Über uns — Stiebeiner Entrümpelung Wunstorf</title>
+  <meta name="description" content="Wir sind Jens Stiebeiner — Ihr zuverlässiger Partner für Wohnungsauflösungen und Entrümpelungen in Wunstorf und der Region Hannover. Diskret, schnell, besenrein." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    body { overflow-x: hidden; overflow-y: auto; }
+
+    /* ── Hero ── */
+    .hero-band {
+      background: var(--bg-dark);
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3.5rem);
+    }
+    .hero-band-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 2rem;
+    }
+    @media (max-width: 600px) {
+      .hero-band-inner { grid-template-columns: 1fr; }
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--accent);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--text-inv);
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      color: rgba(245,244,240,0.50);
+      margin-top: 1.25rem;
+      max-width: 52ch;
+      line-height: 1.65;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+      white-space: nowrap;
+      align-self: center;
+    }
+    .hero-badge-num {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .hero-badge-label {
+      font-size: 0.78rem;
+      color: rgba(245,244,240,0.4);
+      margin-top: 0.3rem;
+      line-height: 1.4;
+    }
+
+    /* ── Story section ── */
+    .story-text h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .story-text p + p { margin-top: 0.9rem; }
+
+    /* ── Values ── */
+    .values-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0;
+      background: var(--border-heavy);
+      border: 1px solid var(--border-heavy);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .value-card {
+      background: var(--surface);
+      padding: 2rem 1.75rem;
+      transition: background 0.2s ease;
+    }
+    .value-card:hover { background: var(--surface-2); }
+    .value-card-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .value-card-icon svg { width: 20px; height: 20px; }
+    .value-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.45rem;
+    }
+    .value-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ── Partner band ── */
+    .partner-band {
+      background: var(--bg-dark);
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3.5rem);
+    }
+    .partner-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .partner-text h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--text-inv);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+    .partner-text p {
+      font-size: 0.9rem;
+      color: rgba(245,244,240,0.45);
+      max-width: 44ch;
+      line-height: 1.6;
+    }
+    .partner-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: var(--accent-text);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .partner-link:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ── Gallery strip ── */
+    .gallery-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border-heavy);
+      border: 1px solid var(--border-heavy);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .gallery-item {
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-faint);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s ease;
+    }
+    .gallery-item:hover { background: var(--surface-2); }
+    /* Texture overlay for visual richness */
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(240,192,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .gallery-item svg {
+      width: 32px;
+      height: 32px;
+      color: var(--text-faint);
+    }
+  </style>
+</head>
+<body class="page-body">
+
+  <!-- Navigation -->
+  <nav class="site-nav" id="siteNav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-mark">
+        <svg viewBox="0 0 18 18" fill="none">
+          <rect x="1" y="9" width="16" height="6" rx="1.5" fill="#151412"/>
+          <rect x="1" y="5" width="10" height="5" rx="1" fill="#151412"/>
+          <circle cx="4.5" cy="15.5" r="1.5" fill="#f0c000"/>
+          <circle cx="13.5" cy="15.5" r="1.5" fill="#f0c000"/>
+        </svg>
+      </span>
+      <span>Stiebeiner&nbsp;Entrümpelung</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Start</a></li>
+      <li><a href="ueber-uns.html" class="active">Über uns</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <a href="kontakt.html" class="nav-cta">Kostenlos anfragen</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-drawer" id="navDrawer">
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li><a href="ueber-uns.html" class="active">Über uns</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <a href="kontakt.html" class="nav-cta">Kostenlos anfragen</a>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-band">
+    <div class="hero-band-inner">
+      <div>
+        <p class="hero-eyebrow">Über uns</p>
+        <h1 class="hero-title">Wir räumen auf.<br><em>Für Sie.</em></h1>
+        <p class="hero-sub">
+          Seit über 10 Jahren sind wir in Wunstorf und der Region Hannover für
+          Privat- und Gewerbekunden im Einsatz. Diskret, zuverlässig, besenrein.
+        </p>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-num">10+</div>
+        <div class="hero-badge-label">Jahre<br>Erfahrung</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stripe-divider"></div>
+
+  <!-- Story -->
+  <div class="section">
+    <p class="eyebrow reveal">Unsere Geschichte</p>
+    <div class="story-grid">
+      <div class="story-text reveal reveal-delay-1">
+        <h3>Aus der Region.<br>Für die Region.</h3>
+        <p class="body-text">
+          Jens Stiebeiner gründete das Unternehmen mit einem einfachen Versprechen:
+          <strong>schnelle, diskrete und faire Entrümpelung</strong> — ohne versteckte Kosten.
+          Was als kleiner Betrieb in Wunstorf begann, hat sich zur festen Größe
+          in der gesamten Region Hannover entwickelt.
+        </p>
+        <p class="body-text">
+          Ob Wohnungsauflösung nach einem Todesfall, Räumung nach Messie-Bewohnern
+          oder die schnelle Kellerentrümpelung — wir kennen jeden Fall und
+          behandeln jeden Auftrag mit dem gleichen Respekt.
+        </p>
+        <p class="body-text">
+          Nicht alles muss auf der Deponie landen. Verwertbare Möbel und Gegenstände
+          geben wir weiter — das schont die Umwelt <em>und</em> Ihren Geldbeutel
+          durch unseren <strong>Wertausgleich</strong>.
+        </p>
+      </div>
+      <div class="story-visual reveal reveal-delay-2">
+        <div class="story-visual-inner">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;">
+            <rect x="6" y="36" width="68" height="26" rx="5" fill="#e8e8e6" stroke="#c8c7c4" stroke-width="1.5"/>
+            <rect x="6" y="20" width="42" height="18" rx="4" fill="#e8e8e6" stroke="#c8c7c4" stroke-width="1.5"/>
+            <circle cx="19" cy="64" r="6" fill="#f0c000" stroke="#c89800" stroke-width="1.5"/>
+            <circle cx="59" cy="64" r="6" fill="#f0c000" stroke="#c89800" stroke-width="1.5"/>
+            <rect x="48" y="28" width="20" height="10" rx="2" fill="#f0c000" opacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Values -->
+  <div class="values-section">
+    <div class="section">
+      <p class="eyebrow reveal">Unsere Werte</p>
+      <h2 class="section-heading reveal reveal-delay-1">Was uns antreibt</h2>
+      <div class="values-grid">
+
+        <div class="value-card reveal">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Diskretion</div>
+          <div class="value-card-desc">Jeder Auftrag wird vertraulich behandelt — egal ob Erbschaftsauflösung oder schwieriger Fall.</div>
+        </div>
+
+        <div class="value-card reveal reveal-delay-1">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Zuverlässigkeit</div>
+          <div class="value-card-desc">Wir kommen zum vereinbarten Termin — und melden uns innerhalb von 24 Stunden nach Ihrer Anfrage.</div>
+        </div>
+
+        <div class="value-card reveal reveal-delay-2">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Besenrein</div>
+          <div class="value-card-desc">Wir verlassen das Objekt so, wie der nächste Nutzer es vorfindet — sauber, geräumt, übergabebereit.</div>
+        </div>
+
+        <div class="value-card reveal reveal-delay-3">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Regional verwurzelt</div>
+          <div class="value-card-desc">Wir kennen die Region — Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. und alle Umgemeinden.</div>
+        </div>
+
+        <div class="value-card reveal">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 0 1 0 20"/>
+              <path d="M12 2C6.48 2 2 6.48 2 12"/>
+              <path d="M2 12h20"/>
+              <path d="M12 2c2.76 3.63 4 7.27 4 10s-1.24 6.37-4 10"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Umweltbewusst</div>
+          <div class="value-card-desc">Verwertbares bleibt im Kreislauf. Kleidung zur Kleiderkasse, Möbel als Second Hand — Deponie ist die letzte Option.</div>
+        </div>
+
+        <div class="value-card reveal reveal-delay-1">
+          <div class="value-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="value-card-title">Fairer Preis</div>
+          <div class="value-card-desc">Kostenlose Besichtigung, transparentes Angebot. Mit Wertausgleich sinken Ihre Kosten oft erheblich.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner -->
+  <div class="partner-band">
+    <div class="partner-inner">
+      <div class="partner-text reveal">
+        <h3>Unser Partner:<br>Kill-Tec Schädlingsbekämpfung</h3>
+        <p>
+          Wir arbeiten mit einem der führenden geprüften Schädlingsbekämpfer
+          im Umkreis zusammen — für Fälle, die mehr erfordern als eine Räumung.
+        </p>
+      </div>
+      <a href="https://www.kill-tec.de" target="_blank" rel="noopener noreferrer"
+         class="partner-link reveal reveal-delay-1">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Kill-Tec.de besuchen
+      </a>
+    </div>
+  </div>
+
+  <!-- Gallery strip -->
+  <div class="section">
+    <p class="eyebrow reveal">Einblicke</p>
+    <h2 class="section-heading reveal reveal-delay-1">Unsere Arbeit</h2>
+    <div class="gallery-strip reveal reveal-delay-2">
+      <div class="gallery-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="gallery-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+      </div>
+      <div class="gallery-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="gallery-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+      </div>
+      <div class="gallery-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA band -->
+  <div class="dark-band">
+    <div class="section" style="text-align:center;">
+      <p class="eyebrow reveal" style="justify-content:center;">Kostenlos & unverbindlich</p>
+      <h2 class="display-heading reveal reveal-delay-1" style="color:var(--text-inv);margin-bottom:1.5rem;">Jetzt Besichtigung vereinbaren</h2>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" class="reveal reveal-delay-2">
+        <a href="tel:015150194741" style="display:inline-flex;align-items:center;gap:0.6rem;background:var(--accent);color:var(--accent-text);font-family:var(--font-display);font-size:0.95rem;font-weight:600;padding:0.85rem 1.75rem;border-radius:var(--radius-sm);transition:background 0.18s,transform 0.18s;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 2.22 2 2 0 0 1 3.6.04h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          0151 / 501 94 741
+        </a>
+        <a href="kontakt.html" style="display:inline-flex;align-items:center;gap:0.6rem;background:rgba(255,255,255,0.08);color:var(--text-inv);font-family:var(--font-display);font-size:0.95rem;font-weight:600;padding:0.85rem 1.75rem;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.15);transition:background 0.18s;">
+          Online anfragen &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>&copy; 2025 Jens Stiebeiner — Wohnungsauflösungen Wunstorf</span>
+    <div class="footer-links">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('siteNav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20), { passive: true });
+    const ham = document.getElementById('navHamburger');
+    const drawer = document.getElementById('navDrawer');
+    ham.addEventListener('click', () => { ham.classList.toggle('open'); drawer.classList.toggle('open'); });
+    const obs = new IntersectionObserver((entries) =>
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }),
+      { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
