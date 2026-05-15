@@ -1,26 +1,30 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body {
   font-family: 'Satoshi', system-ui, sans-serif;
   background: #f5f3ee;
   color: #222;
+  width: 100%;
+  overflow: hidden;
+  height: 100vh;
 }
 
 /* ── Sticky scroll stage ─────────────────────────────────── */
 .scroll-stage {
-  height: 500vh;
+  height: 100vh;
   position: relative;
+  width: 100%;
 }
 
 .sticky-canvas {
-  position: sticky;
+  position: absolute;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   overflow: hidden;
@@ -34,6 +38,46 @@ body {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* ── Outro (erscheint nach Animation) ────────────────────── */
+.outro {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #f5f3ee;
+  gap: 1rem;
+  padding: 2rem;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.outro.visible {
+  display: flex;
+  opacity: 1;
+}
+.outro-icon {
+  font-size: 3rem;
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.outro h2 {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.outro p {
+  font-size: 1rem;
+  color: #666;
+  max-width: 40ch;
+}
+@keyframes pop-in {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 /* ── Scroll hint ────────────────────────────────────────── */
@@ -50,6 +94,7 @@ body {
   opacity: 1;
   transition: opacity 0.5s ease;
   pointer-events: none;
+  white-space: nowrap;
 }
 .scroll-hint.hidden { opacity: 0; }
 .scroll-hint-arrow {
@@ -87,38 +132,6 @@ body {
   transition: width 0.08s linear;
 }
 
-/* ── Outro ─────────────────────────────────────────────── */
-.outro {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: #f5f3ee;
-  gap: 1rem;
-  padding: 2rem;
-}
-.outro-icon {
-  font-size: 3rem;
-  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-.outro h2 {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.outro p {
-  font-size: 1rem;
-  color: #666;
-  max-width: 40ch;
-}
-@keyframes pop-in {
-  from { transform: scale(0.3); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
-}
-
-/* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .progress-bar { right: 1rem; }
 }
