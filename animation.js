@@ -15,7 +15,7 @@ const ctx  = canvas.getContext('2d');
 const hint = document.getElementById('scrollHint');
 const fill = document.getElementById('progressFill');
 
-// ── Scene definitions: frame ranges (1-indexed) ──────────
+// ── Scene definitions: frame ranges (1-indexed) ────────────────────
 const SCENES = [
   { start: 1,  end: 15, id: 'scene-1' },
   { start: 20, end: 38, id: 'scene-2' },
@@ -24,7 +24,7 @@ const SCENES = [
   { start: 81, end: 85, id: 'scene-5' },
 ];
 
-// ── Preload ───────────────────────────────────────────────
+// ── Preload ────────────────────────────────────────────────────
 const frames = [];
 let loaded = 0;
 
@@ -58,7 +58,7 @@ function updateLoadUI() {
   if (fill) fill.style.width = `${pct * 100}%`;
 }
 
-// ── Canvas sizing ─────────────────────────────────────────
+// ── Canvas sizing ───────────────────────────────────────────────
 function resizeCanvas() {
   const dpr  = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth;
@@ -71,7 +71,7 @@ function resizeCanvas() {
   drawFrame(currentFrameIndex());
 }
 
-// ── Draw ──────────────────────────────────────────────────
+// ── Draw ─────────────────────────────────────────────────────────
 function drawFrame(index) {
   const img = frames[Math.max(0, Math.min(index, frames.length - 1))];
   if (!img?.complete || !img.naturalWidth) return;
@@ -84,18 +84,36 @@ function drawFrame(index) {
   ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
 }
 
-// ── Scroll Progress from DOM ──────────────────────────────
-// The outer .anim-sticky-outer element defines the scroll range.
-// Progress = how far we've scrolled through it (0 → 1).
+// ── Get nav height reliably ──────────────────────────────────────
+function getNavH() {
+  const nav = document.getElementById('siteNav');
+  if (nav) return nav.offsetHeight;
+  // fallback: parse CSS variable
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-h').trim();
+  return parseInt(raw) || 64;
+}
+
+// ── Scroll Progress from DOM ──────────────────────────────────
+//
+// The outer .anim-sticky-outer defines the total scrollable height (500vh).
+// The sticky inner sticks from top: navH with height: (100vh - navH).
+//
+// When scrollY = 0:          outer.getBoundingClientRect().top = navH  (just below nav)
+// When animation ends:        outer.top = -(outerH - vh)             (outer bottom at viewport bottom)
+//
+// trackLen = total scroll distance = outerH - vh
+// scrolled  = -(rect.top - navH)   = how far past the start we've gone
+//
 function getScrollProgress() {
   const outer = document.getElementById('animOuter');
   if (!outer) return 0;
-  const rect       = outer.getBoundingClientRect();
-  const navH       = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64;
-  const visStart   = navH;           // top of viewport below nav
-  const trackLen   = outer.offsetHeight - window.innerHeight + navH;
-  // scrolled distance into the outer = -(rect.top - visStart)
-  const scrolled   = -(rect.top - visStart);
+  const rect    = outer.getBoundingClientRect();
+  const navH    = getNavH();
+  const vh      = window.innerHeight;
+  // Total scrollable distance through this section
+  const trackLen = outer.offsetHeight - vh;
+  // How far we've scrolled into it (rect.top starts at navH when at top of page)
+  const scrolled = navH - rect.top;
   return Math.max(0, Math.min(1, scrolled / Math.max(1, trackLen)));
 }
 
@@ -104,7 +122,7 @@ function currentFrameIndex() {
   return Math.min(TOTAL_FRAMES - 1, Math.floor(p * TOTAL_FRAMES));
 }
 
-// ── Overlay logic ─────────────────────────────────────────
+// ── Overlay logic ──────────────────────────────────────────────────
 function updateOverlays(frameIndex) {
   const frame1 = frameIndex + 1;
   let activeScene = null;
@@ -120,7 +138,7 @@ function updateOverlays(frameIndex) {
   if (cta) cta.classList.toggle('visible', !!(activeScene && activeScene.id === 'scene-5'));
 }
 
-// ── Main scroll handler ───────────────────────────────────
+// ── Main scroll handler ────────────────────────────────────────────
 let ticking = false;
 function onScroll() {
   if (ticking) return;
