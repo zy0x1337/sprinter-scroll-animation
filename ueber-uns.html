@@ -89,7 +89,11 @@
     }
 
     /* ═══════════════════════════════════════════════════
-       LEISTUNGEN — numbered card grid
+       LEISTUNGEN — 4-col bento with grid-template-areas
+       Desktop layout:
+         [ featured (col 1-2 / row 1-2) ] [ 02 ] [ 03 ]
+         [ featured (col 1-2 / row 1-2) ] [ 04 ] [ 05 ]
+         [ 06 (col 1-2)                 ] [ cta (col 3-4) ]
     ═══════════════════════════════════════════════════ */
     .leistungen-section {
       padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3.5rem);
@@ -100,29 +104,46 @@
     .leistungen-grid {
       margin-top: 2.5rem;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto auto;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr auto;
+      grid-template-areas:
+        "feat feat c02 c03"
+        "feat feat c04 c05"
+        "c06  c06  cta cta";
       gap: 2px;
       background: rgba(0,0,0,0.13);
       border-radius: var(--radius-xl);
       overflow: hidden;
     }
 
-    /* Featured card spans 2 rows on the left */
-    .lcard--featured {
-      grid-row: 1 / 3;
-    }
+    .lcard--featured { grid-area: feat; }
+    .lcard--c02      { grid-area: c02; }
+    .lcard--c03      { grid-area: c03; }
+    .lcard--c04      { grid-area: c04; }
+    .lcard--c05      { grid-area: c05; }
+    .lcard--c06      { grid-area: c06; }
+    .lcard--cta      { grid-area: cta; }
 
+    /* ── Tablet: 2 cols, no areas ── */
     @media (max-width: 860px) {
       .leistungen-grid {
         grid-template-columns: 1fr 1fr;
+        grid-template-rows: none;
+        grid-template-areas: none;
       }
-      .lcard--featured { grid-row: auto; }
+      .lcard--featured,
+      .lcard--c02, .lcard--c03,
+      .lcard--c04, .lcard--c05,
+      .lcard--c06, .lcard--cta { grid-area: auto; }
+      .lcard--cta { grid-column: span 2; }
     }
+    /* ── Mobile: 1 col ── */
     @media (max-width: 520px) {
       .leistungen-grid { grid-template-columns: 1fr; }
+      .lcard--cta { grid-column: span 1; }
     }
 
+    /* ── Base card ── */
     .lcard {
       background: var(--surface);
       padding: 2rem 1.75rem 1.75rem;
@@ -134,19 +155,90 @@
       min-height: 200px;
       transition: background 0.22s ease;
     }
-    .lcard:hover {
-      background: var(--surface-2);
-    }
+    .lcard:hover { background: var(--surface-2); }
+
+    /* ── Featured (large dark) ── */
     .lcard--featured {
       background: var(--bg-dark);
       min-height: 420px;
       padding: 2.5rem 2rem 2rem;
     }
-    .lcard--featured:hover {
-      background: #232220;
+    .lcard--featured:hover { background: #232220; }
+
+    /* ── CTA cell ── */
+    .lcard--cta {
+      background: var(--bg-dark);
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 2.25rem 2rem;
+      min-height: 0;
+    }
+    .lcard--cta:hover { background: #1e1d1b; }
+    .lcard-cta-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(240,192,0,0.55);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .lcard-cta-label::before {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+    .lcard-cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-inv);
+      margin-bottom: 1.25rem;
+    }
+    .lcard-cta-btns {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .lcard-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-sm);
+      transition: background 0.18s ease, transform 0.18s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .lcard-cta-btn--primary {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+    .lcard-cta-btn--primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+    .lcard-cta-btn--ghost {
+      background: rgba(255,255,255,0.07);
+      color: var(--text-inv);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .lcard-cta-btn--ghost:hover {
+      background: rgba(255,255,255,0.12);
     }
 
-    /* Big ghost number */
+    /* ── Ghost number ── */
     .lcard-num {
       position: absolute;
       top: -0.15em;
@@ -164,7 +256,11 @@
       color: rgba(240,192,0,0.08);
       font-size: clamp(7rem, 16vw, 13rem);
     }
+    .lcard--c06 .lcard-num {
+      font-size: clamp(6rem, 13vw, 10rem);
+    }
 
+    /* ── Tag ── */
     .lcard-tag {
       display: inline-flex;
       align-items: center;
@@ -176,9 +272,7 @@
       color: var(--text-faint);
       margin-bottom: 0.75rem;
     }
-    .lcard--featured .lcard-tag {
-      color: rgba(240,192,0,0.55);
-    }
+    .lcard--featured .lcard-tag { color: rgba(240,192,0,0.55); }
     .lcard-tag::before {
       content: '';
       display: block;
@@ -188,6 +282,7 @@
       border-radius: 2px;
     }
 
+    /* ── Titles ── */
     .lcard-title {
       font-family: var(--font-display);
       font-weight: 600;
@@ -199,10 +294,11 @@
       color: var(--text-inv);
       font-size: clamp(1.5rem, 3.5vw, 2.4rem);
     }
-    .lcard:not(.lcard--featured) .lcard-title {
+    .lcard:not(.lcard--featured):not(.lcard--cta) .lcard-title {
       font-size: clamp(1rem, 2vw, 1.25rem);
     }
 
+    /* ── Descriptions ── */
     .lcard-desc {
       margin-top: 0.6rem;
       font-size: 0.84rem;
@@ -214,11 +310,9 @@
       max-width: 36ch;
       margin-top: 0.8rem;
     }
-    .lcard:not(.lcard--featured) .lcard-desc {
-      color: var(--text-muted);
-    }
+    .lcard:not(.lcard--featured) .lcard-desc { color: var(--text-muted); }
 
-    /* Accent pill at bottom of featured */
+    /* ── Accent pill ── */
     .lcard-pill {
       display: inline-flex;
       align-items: center;
@@ -384,10 +478,7 @@
       font-weight: 500;
       color: var(--text);
     }
-    .contact-info-value a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .contact-info-value a { color: var(--accent); text-decoration: none; }
     .contact-info-value a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -447,7 +538,7 @@
   <div class="stripe-divider"></div>
 
   <!-- ═══════════════════════════════════
-       LEISTUNGEN
+       LEISTUNGEN — 4-col bento
   ═══════════════════════════════════ -->
   <div class="leistungen-section">
     <p class="eyebrow reveal">Was wir anbieten</p>
@@ -455,7 +546,7 @@
 
     <div class="leistungen-grid">
 
-      <!-- Featured: Komplettauflösung -->
+      <!-- 01 Featured -->
       <div class="lcard lcard--featured reveal">
         <span class="lcard-num">01</span>
         <span class="lcard-tag">Kernleistung</span>
@@ -467,44 +558,59 @@
         </span>
       </div>
 
-      <!-- Card 2 -->
-      <div class="lcard reveal">
+      <!-- 02 -->
+      <div class="lcard lcard--c02 reveal">
         <span class="lcard-num">02</span>
         <span class="lcard-tag">Kleinaufträge</span>
         <h3 class="lcard-title">Entrümpelung</h3>
-        <p class="lcard-desc">Keller, Garage, Gartenhaus, Schuppen — auch Einzelobjekte und Kleinigkeiten werden fachgerecht entsorgt.</p>
+        <p class="lcard-desc">Keller, Garage, Gartenhaus, Schuppen — auch Einzelobjekte werden fachgerecht entsorgt.</p>
       </div>
 
-      <!-- Card 3 -->
-      <div class="lcard reveal reveal-delay-1">
+      <!-- 03 -->
+      <div class="lcard lcard--c03 reveal reveal-delay-1">
         <span class="lcard-num">03</span>
         <span class="lcard-tag">Außenbereiche</span>
         <h3 class="lcard-title">Garten &amp; Terrasse</h3>
         <p class="lcard-desc">Balkon, Schrebergarten, Wintergarten, Gartenhaus — vollständig geräumt und entsorgt.</p>
       </div>
 
-      <!-- Card 4 -->
-      <div class="lcard reveal reveal-delay-2">
+      <!-- 04 -->
+      <div class="lcard lcard--c04 reveal reveal-delay-1">
         <span class="lcard-num">04</span>
         <span class="lcard-tag">Schwierige Fälle</span>
         <h3 class="lcard-title">Messie &amp; Sonderfälle</h3>
-        <p class="lcard-desc">Diskret, ohne Wertung. Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem für uns.</p>
+        <p class="lcard-desc">Diskret, ohne Wertung. Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem.</p>
       </div>
 
-      <!-- Card 5 -->
-      <div class="lcard reveal">
+      <!-- 05 -->
+      <div class="lcard lcard--c05 reveal reveal-delay-2">
         <span class="lcard-num">05</span>
         <span class="lcard-tag">Kostenvorteil</span>
         <h3 class="lcard-title">Wertausgleich</h3>
-        <p class="lcard-desc">Noch verwertbare Möbel und Gegenstände reduzieren Ihre Kosten direkt beim Angebot.</p>
+        <p class="lcard-desc">Noch verwertbare Möbel reduzieren Ihre Kosten direkt beim Angebot.</p>
       </div>
 
-      <!-- Card 6 -->
-      <div class="lcard reveal reveal-delay-1">
+      <!-- 06 — spans left 2 cols in row 3 -->
+      <div class="lcard lcard--c06 reveal">
         <span class="lcard-num">06</span>
         <span class="lcard-tag">Fernauftrag</span>
         <h3 class="lcard-title">Schlüssel&shy;übergabe-Service</h3>
         <p class="lcard-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel und geben nach der Räumung zurück.</p>
+      </div>
+
+      <!-- CTA cell — spans right 2 cols in row 3 -->
+      <div class="lcard lcard--cta reveal reveal-delay-1">
+        <span class="lcard-cta-label">Kostenlos &amp; unverbindlich</span>
+        <p class="lcard-cta-title">Jetzt Besichtigung<br>vereinbaren</p>
+        <div class="lcard-cta-btns">
+          <a href="tel:015150194741" class="lcard-cta-btn lcard-cta-btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 2.22 2 2 0 0 1 3.6.04h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0151 / 501 94 741
+          </a>
+          <a href="kontakt.html" class="lcard-cta-btn lcard-cta-btn--ghost">
+            Online anfragen &rarr;
+          </a>
+        </div>
       </div>
 
     </div>
@@ -519,9 +625,7 @@
 
         <div class="value-card reveal">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <div class="value-card-title">Diskretion</div>
           <div class="value-card-desc">Jeder Auftrag wird vertraulich behandelt — egal ob Erbschaftsauflösung oder schwieriger Fall.</div>
@@ -529,9 +633,7 @@
 
         <div class="value-card reveal reveal-delay-1">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <div class="value-card-title">Zuverlässigkeit</div>
           <div class="value-card-desc">Wir kommen zum vereinbarten Termin — und melden uns innerhalb von 24 Stunden nach Ihrer Anfrage.</div>
@@ -539,9 +641,7 @@
 
         <div class="value-card reveal reveal-delay-2">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
           <div class="value-card-title">Besenrein</div>
           <div class="value-card-desc">Wir verlassen das Objekt so, wie der nächste Nutzer es vorfindet — sauber, geräumt, übergabebereit.</div>
@@ -549,9 +649,7 @@
 
         <div class="value-card reveal reveal-delay-3">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
           <div class="value-card-title">Regional verwurzelt</div>
           <div class="value-card-desc">Wir kennen die Region — Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. und alle umliegenden Orte.</div>
@@ -559,9 +657,7 @@
 
         <div class="value-card reveal">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
           </div>
           <div class="value-card-title">Umweltbewusst</div>
           <div class="value-card-desc">Verwertbares bleibt im Kreislauf — Deponie ist die letzte Option.</div>
@@ -569,9 +665,7 @@
 
         <div class="value-card reveal reveal-delay-1">
           <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
           <div class="value-card-title">Fairer Preis</div>
           <div class="value-card-desc">Kostenlose Besichtigung, transparentes Angebot — ohne versteckte Kosten.</div>
@@ -589,48 +683,20 @@
       Wir bieten Wohnungsauflösungen und Entrümpelungen in folgenden Orten an:
     </p>
     <ul class="areas-grid reveal reveal-delay-3">
-      <li>Wunstorf</li>
-      <li>Bad Nenndorf</li>
-      <li>Barsinghausen</li>
-      <li>Neustadt a. Rbge.</li>
-      <li>Stadthagen</li>
-      <li>Garbsen</li>
-      <li>Berenbostel</li>
-      <li>Havelse</li>
-      <li>Hannover</li>
-      <li>Steinhude</li>
-      <li>Hagenburg</li>
-      <li>Haste</li>
-      <li>Idensen</li>
-      <li>Mesmerode</li>
-      <li>Schloss Ricklingen</li>
-      <li>Luthe</li>
-      <li>Osterwald</li>
-      <li>Groß Munzel</li>
-      <li>Frielingen</li>
-      <li>Horst</li>
-      <li>Ronnenberg</li>
-      <li>Bokeloh</li>
-      <li>Blumenau</li>
-      <li>Altenhagen</li>
-      <li>Mardorf</li>
-      <li>Landringhausen</li>
-      <li>Poggenhagen</li>
-      <li>Bordenau</li>
-      <li>Eilvese</li>
-      <li>Suttorf</li>
-      <li>Basse</li>
-      <li>Himmelreich</li>
-      <li>Hagen</li>
-      <li>Wulfelade</li>
-      <li>Mariensee</li>
-      <li>Lathwehren</li>
-      <li>Bantorf</li>
-      <li>Bad Rehburg</li>
-      <li>Winzlar</li>
-      <li>Rehburg-Loccum</li>
-      <li>Auhagen</li>
-      <li>Garbsen-Stelingen</li>
+      <li>Wunstorf</li><li>Bad Nenndorf</li><li>Barsinghausen</li>
+      <li>Neustadt a. Rbge.</li><li>Stadthagen</li><li>Garbsen</li>
+      <li>Berenbostel</li><li>Havelse</li><li>Hannover</li>
+      <li>Steinhude</li><li>Hagenburg</li><li>Haste</li>
+      <li>Idensen</li><li>Mesmerode</li><li>Schloss Ricklingen</li>
+      <li>Luthe</li><li>Osterwald</li><li>Groß Munzel</li>
+      <li>Frielingen</li><li>Horst</li><li>Ronnenberg</li>
+      <li>Bokeloh</li><li>Blumenau</li><li>Altenhagen</li>
+      <li>Mardorf</li><li>Landringhausen</li><li>Poggenhagen</li>
+      <li>Bordenau</li><li>Eilvese</li><li>Suttorf</li>
+      <li>Basse</li><li>Himmelreich</li><li>Hagen</li>
+      <li>Wulfelade</li><li>Mariensee</li><li>Lathwehren</li>
+      <li>Bantorf</li><li>Bad Rehburg</li><li>Winzlar</li>
+      <li>Rehburg-Loccum</li><li>Auhagen</li><li>Garbsen-Stelingen</li>
       <li>Garbsen-Osterwald</li>
     </ul>
   </div>
@@ -640,13 +706,9 @@
     <div class="partner-inner">
       <div class="partner-text reveal">
         <h3>Unser Partner:<br>Kill-Tec Schädlingsbekämpfung</h3>
-        <p>
-          Für Fälle, die mehr erfordern als eine Räumung, arbeiten wir mit
-          Kill-Tec Schädlingsbekämpfung zusammen.
-        </p>
+        <p>Für Fälle, die mehr erfordern als eine Räumung, arbeiten wir mit Kill-Tec Schädlingsbekämpfung zusammen.</p>
       </div>
-      <a href="https://www.kill-tec.de" target="_blank" rel="noopener noreferrer"
-         class="partner-link reveal reveal-delay-1">
+      <a href="https://www.kill-tec.de" target="_blank" rel="noopener noreferrer" class="partner-link reveal reveal-delay-1">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Kill-Tec.de besuchen
       </a>
