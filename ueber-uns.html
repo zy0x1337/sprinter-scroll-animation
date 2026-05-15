@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Über uns — Stiebeiner Entrümpelung Wunstorf</title>
-  <meta name="description" content="Wir sind Jens Stiebeiner — Ihr zuverlässiger Partner für Wohnungsauflösungen und Entrümpelungen in Wunstorf und der Region Hannover. Diskret, schnell, besenrein." />
+  <meta name="description" content="Wir bieten Wohnungsauflösungen und Entrümpelungen in Wunstorf und der gesamten Region Hannover an. Diskret, zuverlässig, besenrein." />
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="site.css" />
@@ -88,15 +88,65 @@
       line-height: 1.4;
     }
 
-    /* ── Story section ── */
-    .story-text h3 {
-      font-family: var(--font-display);
-      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
+    /* ── Services ── */
+    .services-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border-heavy);
+      border: 1px solid var(--border-heavy);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 2rem;
     }
-    .story-text p + p { margin-top: 0.9rem; }
+    .services-list li {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: background 0.18s;
+    }
+    .services-list li:hover { background: var(--surface-2); }
+    .services-list li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── Areas ── */
+    .areas-grid {
+      columns: 3 200px;
+      column-gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .areas-grid li {
+      break-inside: avoid;
+      list-style: none;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .areas-grid li::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
 
     /* ── Values ── */
     .values-section {
@@ -191,45 +241,40 @@
       transform: translateY(-1px);
     }
 
-    /* ── Gallery strip ── */
-    .gallery-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1px;
-      background: var(--border-heavy);
-      border: 1px solid var(--border-heavy);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-top: 2.5rem;
-    }
-    .gallery-item {
-      aspect-ratio: 4/3;
+    /* ── Contact info ── */
+    .contact-info-band {
       background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .contact-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .contact-info-item {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-faint);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .contact-info-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.2s ease;
-    }
-    .gallery-item:hover { background: var(--surface-2); }
-    /* Texture overlay for visual richness */
-    .gallery-item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(240,192,0,0.06) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .gallery-item svg {
-      width: 32px;
-      height: 32px;
       color: var(--text-faint);
     }
+    .contact-info-value {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .contact-info-value a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .contact-info-value a:hover { text-decoration: underline; }
   </style>
 </head>
 <body class="page-body">
@@ -274,8 +319,8 @@
         <p class="hero-eyebrow">Über uns</p>
         <h1 class="hero-title">Wir räumen auf.<br><em>Für Sie.</em></h1>
         <p class="hero-sub">
-          Seit über 10 Jahren sind wir in Wunstorf und der Region Hannover für
-          Privat- und Gewerbekunden im Einsatz. Diskret, zuverlässig, besenrein.
+          In Wunstorf, Garbsen, Hannover, Bad Nenndorf, Stadthagen, Barsinghausen
+          und Neustadt am Rübenberge für Sie unterwegs.
         </p>
       </div>
       <div class="hero-badge">
@@ -287,41 +332,18 @@
 
   <div class="stripe-divider"></div>
 
-  <!-- Story -->
+  <!-- Services -->
   <div class="section">
-    <p class="eyebrow reveal">Unsere Geschichte</p>
-    <div class="story-grid">
-      <div class="story-text reveal reveal-delay-1">
-        <h3>Aus der Region.<br>Für die Region.</h3>
-        <p class="body-text">
-          Jens Stiebeiner gründete das Unternehmen mit einem einfachen Versprechen:
-          <strong>schnelle, diskrete und faire Entrümpelung</strong> — ohne versteckte Kosten.
-          Was als kleiner Betrieb in Wunstorf begann, hat sich zur festen Größe
-          in der gesamten Region Hannover entwickelt.
-        </p>
-        <p class="body-text">
-          Ob Wohnungsauflösung nach einem Todesfall, Räumung nach Messie-Bewohnern
-          oder die schnelle Kellerentrümpelung — wir kennen jeden Fall und
-          behandeln jeden Auftrag mit dem gleichen Respekt.
-        </p>
-        <p class="body-text">
-          Nicht alles muss auf der Deponie landen. Verwertbare Möbel und Gegenstände
-          geben wir weiter — das schont die Umwelt <em>und</em> Ihren Geldbeutel
-          durch unseren <strong>Wertausgleich</strong>.
-        </p>
-      </div>
-      <div class="story-visual reveal reveal-delay-2">
-        <div class="story-visual-inner">
-          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;">
-            <rect x="6" y="36" width="68" height="26" rx="5" fill="#e8e8e6" stroke="#c8c7c4" stroke-width="1.5"/>
-            <rect x="6" y="20" width="42" height="18" rx="4" fill="#e8e8e6" stroke="#c8c7c4" stroke-width="1.5"/>
-            <circle cx="19" cy="64" r="6" fill="#f0c000" stroke="#c89800" stroke-width="1.5"/>
-            <circle cx="59" cy="64" r="6" fill="#f0c000" stroke="#c89800" stroke-width="1.5"/>
-            <rect x="48" y="28" width="20" height="10" rx="2" fill="#f0c000" opacity="0.6"/>
-          </svg>
-        </div>
-      </div>
-    </div>
+    <p class="eyebrow reveal">Was wir anbieten</p>
+    <h2 class="section-heading reveal reveal-delay-1">Unsere Leistungen</h2>
+    <ul class="services-list reveal reveal-delay-2">
+      <li>Entrümpelung und Entsorgung von Wohnräumen</li>
+      <li>Haushaltsauflösung — besenrein</li>
+      <li>Wohnungsauflösung</li>
+      <li>Entrümpelung von Garten und Terrasse</li>
+      <li>Balkon, Gartenhaus, Schrebergarten, Wintergarten</li>
+      <li>Auch Kleinigkeiten werden entsorgt</li>
+    </ul>
   </div>
 
   <!-- Values -->
@@ -344,8 +366,7 @@
         <div class="value-card reveal reveal-delay-1">
           <div class="value-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
           <div class="value-card-title">Zuverlässigkeit</div>
@@ -355,8 +376,7 @@
         <div class="value-card reveal reveal-delay-2">
           <div class="value-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
           </div>
           <div class="value-card-title">Besenrein</div>
@@ -366,40 +386,89 @@
         <div class="value-card reveal reveal-delay-3">
           <div class="value-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
           </div>
           <div class="value-card-title">Regional verwurzelt</div>
-          <div class="value-card-desc">Wir kennen die Region — Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. und alle Umgemeinden.</div>
+          <div class="value-card-desc">Wir kennen die Region — Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. und alle umliegenden Orte.</div>
         </div>
 
         <div class="value-card reveal">
           <div class="value-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2a10 10 0 0 1 0 20"/>
-              <path d="M12 2C6.48 2 2 6.48 2 12"/>
-              <path d="M2 12h20"/>
-              <path d="M12 2c2.76 3.63 4 7.27 4 10s-1.24 6.37-4 10"/>
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
             </svg>
           </div>
           <div class="value-card-title">Umweltbewusst</div>
-          <div class="value-card-desc">Verwertbares bleibt im Kreislauf. Kleidung zur Kleiderkasse, Möbel als Second Hand — Deponie ist die letzte Option.</div>
+          <div class="value-card-desc">Verwertbares bleibt im Kreislauf — Deponie ist die letzte Option.</div>
         </div>
 
         <div class="value-card reveal reveal-delay-1">
           <div class="value-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="1" x2="12" y2="23"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
           </div>
           <div class="value-card-title">Fairer Preis</div>
-          <div class="value-card-desc">Kostenlose Besichtigung, transparentes Angebot. Mit Wertausgleich sinken Ihre Kosten oft erheblich.</div>
+          <div class="value-card-desc">Kostenlose Besichtigung, transparentes Angebot — ohne versteckte Kosten.</div>
         </div>
 
       </div>
     </div>
+  </div>
+
+  <!-- Areas -->
+  <div class="section">
+    <p class="eyebrow reveal">Einsatzgebiet</p>
+    <h2 class="section-heading reveal reveal-delay-1">Unser Einzugsgebiet</h2>
+    <p class="body-text reveal reveal-delay-2">
+      Wir bieten Wohnungsauflösungen und Entrümpelungen in folgenden Orten an:
+    </p>
+    <ul class="areas-grid reveal reveal-delay-3">
+      <li>Wunstorf</li>
+      <li>Bad Nenndorf</li>
+      <li>Barsinghausen</li>
+      <li>Neustadt a. Rbge.</li>
+      <li>Stadthagen</li>
+      <li>Garbsen</li>
+      <li>Berenbostel</li>
+      <li>Havelse</li>
+      <li>Hannover</li>
+      <li>Steinhude</li>
+      <li>Hagenburg</li>
+      <li>Haste</li>
+      <li>Idensen</li>
+      <li>Mesmerode</li>
+      <li>Schloss Ricklingen</li>
+      <li>Luthe</li>
+      <li>Osterwald</li>
+      <li>Groß Munzel</li>
+      <li>Frielingen</li>
+      <li>Horst</li>
+      <li>Ronnenberg</li>
+      <li>Bokeloh</li>
+      <li>Blumenau</li>
+      <li>Altenhagen</li>
+      <li>Mardorf</li>
+      <li>Landringhausen</li>
+      <li>Poggenhagen</li>
+      <li>Bordenau</li>
+      <li>Eilvese</li>
+      <li>Suttorf</li>
+      <li>Basse</li>
+      <li>Himmelreich</li>
+      <li>Hagen</li>
+      <li>Wulfelade</li>
+      <li>Mariensee</li>
+      <li>Lathwehren</li>
+      <li>Bantorf</li>
+      <li>Bad Rehburg</li>
+      <li>Winzlar</li>
+      <li>Rehburg-Loccum</li>
+      <li>Auhagen</li>
+      <li>Garbsen-Stelingen</li>
+      <li>Garbsen-Osterwald</li>
+    </ul>
   </div>
 
   <!-- Partner -->
@@ -408,8 +477,8 @@
       <div class="partner-text reveal">
         <h3>Unser Partner:<br>Kill-Tec Schädlingsbekämpfung</h3>
         <p>
-          Wir arbeiten mit einem der führenden geprüften Schädlingsbekämpfer
-          im Umkreis zusammen — für Fälle, die mehr erfordern als eine Räumung.
+          Für Fälle, die mehr erfordern als eine Räumung, arbeiten wir mit
+          Kill-Tec Schädlingsbekämpfung zusammen.
         </p>
       </div>
       <a href="https://www.kill-tec.de" target="_blank" rel="noopener noreferrer"
@@ -420,25 +489,23 @@
     </div>
   </div>
 
-  <!-- Gallery strip -->
-  <div class="section">
-    <p class="eyebrow reveal">Einblicke</p>
-    <h2 class="section-heading reveal reveal-delay-1">Unsere Arbeit</h2>
-    <div class="gallery-strip reveal reveal-delay-2">
-      <div class="gallery-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <div class="gallery-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-      </div>
-      <div class="gallery-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-      </div>
-      <div class="gallery-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-      </div>
-      <div class="gallery-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+  <!-- Contact info -->
+  <div class="contact-info-band">
+    <div class="section">
+      <p class="eyebrow reveal">So finden Sie uns</p>
+      <div class="contact-info-grid reveal reveal-delay-1">
+        <div class="contact-info-item">
+          <span class="contact-info-label">Adresse</span>
+          <span class="contact-info-value">Jens Stiebeiner<br>Manhorner Str. 4<br>31515 Wunstorf</span>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">Telefon</span>
+          <span class="contact-info-value"><a href="tel:015150194741">0151 / 501 94 741</a></span>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">E-Mail</span>
+          <span class="contact-info-value"><a href="mailto:jensstiebeiner@yahoo.de">jensstiebeiner@yahoo.de</a></span>
+        </div>
       </div>
     </div>
   </div>
@@ -446,7 +513,7 @@
   <!-- CTA band -->
   <div class="dark-band">
     <div class="section" style="text-align:center;">
-      <p class="eyebrow reveal" style="justify-content:center;">Kostenlos & unverbindlich</p>
+      <p class="eyebrow reveal" style="justify-content:center;">Kostenlos &amp; unverbindlich</p>
       <h2 class="display-heading reveal reveal-delay-1" style="color:var(--text-inv);margin-bottom:1.5rem;">Jetzt Besichtigung vereinbaren</h2>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" class="reveal reveal-delay-2">
         <a href="tel:015150194741" style="display:inline-flex;align-items:center;gap:0.6rem;background:var(--accent);color:var(--accent-text);font-family:var(--font-display);font-size:0.95rem;font-weight:600;padding:0.85rem 1.75rem;border-radius:var(--radius-sm);transition:background 0.18s,transform 0.18s;">
