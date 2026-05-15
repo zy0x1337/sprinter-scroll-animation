@@ -11,7 +11,6 @@ const canvas = document.getElementById('vanCanvas');
 const ctx    = canvas.getContext('2d');
 const hint   = document.getElementById('scrollHint');
 const fill   = document.getElementById('progressFill');
-const outro  = document.getElementById('outro');
 
 // ── Preload ──────────────────────────────────────────────
 const frames = [];
@@ -20,8 +19,6 @@ let loaded = 0;
 function onAllLoaded() {
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-
-  // Alle Scroll-Events auf document abfangen, passive:false = preventDefault möglich
   document.addEventListener('wheel',      onWheel,      { passive: false, capture: true });
   document.addEventListener('touchstart', onTouchStart, { passive: true,  capture: true });
   document.addEventListener('touchmove',  onTouchMove,  { passive: false, capture: true });
@@ -52,39 +49,21 @@ function drawFrame(index) {
   const cw = canvas.offsetWidth;
   const ch = canvas.offsetHeight;
 
-  ctx.clearRect(0, 0, cw, ch);
-
-  const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+  // Cover: Frame füllt den Canvas vollständig, kein Letterbox
+  const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
   const w = img.naturalWidth  * scale;
   const h = img.naturalHeight * scale;
   const x = (cw - w) / 2;
   const y = (ch - h) / 2;
 
-  const pad = 32;
-  ctx.save();
-  ctx.beginPath();
-  ctx.roundRect(x + pad, y + pad, w - pad*2, h - pad*2, 0);
-  ctx.clip();
+  ctx.clearRect(0, 0, cw, ch);
   ctx.drawImage(img, x, y, w, h);
-  ctx.restore();
-
-  const vx = x + pad, vy = y + pad, vw = w - pad*2, vh = h - pad*2;
-  const bg0 = '#f5f3ee', bg1 = 'rgba(245,243,238,0)';
-  const gT = ctx.createLinearGradient(0, vy,       0, vy + vh*0.2);    gT.addColorStop(0, bg0); gT.addColorStop(1, bg1);
-  const gB = ctx.createLinearGradient(0, vy + vh,  0, vy + vh*0.8);    gB.addColorStop(0, bg0); gB.addColorStop(1, bg1);
-  const gL = ctx.createLinearGradient(vx,      0,  vx + vw*0.15, 0);   gL.addColorStop(0, bg0); gL.addColorStop(1, bg1);
-  const gR = ctx.createLinearGradient(vx + vw, 0,  vx + vw*0.85, 0);   gR.addColorStop(0, bg0); gR.addColorStop(1, bg1);
-  ctx.fillStyle = gT; ctx.fillRect(vx, vy,           vw, vh*0.2);
-  ctx.fillStyle = gB; ctx.fillRect(vx, vy + vh*0.8,  vw, vh*0.2);
-  ctx.fillStyle = gL; ctx.fillRect(vx, vy,            vw*0.15, vh);
-  ctx.fillStyle = gR; ctx.fillRect(vx + vw*0.85, vy,  vw*0.15, vh);
 }
 
 // ── Virtual Scroll State ─────────────────────────────────
-let vScroll     = 0;
-let hintHidden  = false;
-let outroShown  = false;
-let ticking     = false;
+let vScroll    = 0;
+let hintHidden = false;
+let ticking    = false;
 let touchStartY = 0;
 
 function getProgress() {
@@ -100,20 +79,9 @@ function update() {
   const p = getProgress();
   fill.style.width = `${p * 100}%`;
   drawFrame(currentFrameIndex());
-
   if (!hintHidden && vScroll > 20) {
     hint.classList.add('hidden');
     hintHidden = true;
-  }
-
-  if (p >= 1 && !outroShown) {
-    outroShown = true;
-    outro.style.display = 'flex';
-    requestAnimationFrame(() => outro.classList.add('visible'));
-  } else if (p < 0.98 && outroShown) {
-    outroShown = false;
-    outro.classList.remove('visible');
-    setTimeout(() => { if (!outroShown) outro.style.display = 'none'; }, 600);
   }
 }
 

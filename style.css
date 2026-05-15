@@ -10,16 +10,13 @@ html, body {
 
 body {
   font-family: 'Satoshi', system-ui, sans-serif;
-  background: #f5f3ee;
+  /* Hintergrund passend zum Frame-Hintergrund (weißlicher Himmel/Boden der Frames) */
+  background: #d6e4f0;
   color: #222;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
 }
 
-/* ── Sticky scroll stage ─────────────────────────────────── */
 .scroll-stage {
   width: 100%;
   height: 100%;
@@ -28,60 +25,18 @@ body {
 
 .sticky-canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  background: #f5f3ee;
+  background: #d6e4f0;
 }
 
-/* ── Canvas ──────────────────────────────────────────────── */
 #vanCanvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
-}
-
-/* ── Outro ─────────────────────────────────────────────── */
-.outro {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: #f5f3ee;
-  gap: 1rem;
-  padding: 2rem;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-.outro.visible {
-  display: flex;
-  opacity: 1;
-}
-.outro-icon {
-  font-size: 3rem;
-  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-.outro h2 {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.outro p {
-  font-size: 1rem;
-  color: #666;
-  max-width: 40ch;
-}
-@keyframes pop-in {
-  from { transform: scale(0.3); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
 }
 
 /* ── Scroll hint ────────────────────────────────────────── */
