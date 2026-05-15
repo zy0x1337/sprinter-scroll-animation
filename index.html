@@ -7,75 +7,8 @@
   <meta name="description" content="Professionelle Wohnungsauflösung, Haushaltsauflösung und Entrümpelung in Wunstorf und Umgebung. Kostenlose Besichtigung, zertifizierte Entsorgung, Wertausgleich." />
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="site.css" />
-  <style>
-    /* Index-specific: animation section fills viewport */
-    .animation-section {
-      position: relative;
-      height: calc(100vh - var(--nav-h));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
-        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
-        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
-        #d0d0d2;
-    }
-    /* Override body to allow scrolling on index page */
-    body {
-      overflow-x: hidden;
-      overflow-y: auto;
-      position: static;
-    }
-    /* The animation stage is now a section, not a fixed fullscreen */
-    .scroll-stage {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .sticky-canvas {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      margin: auto;
-      background:
-        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
-        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
-        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
-        #d0d0d2;
-      container-type: size;
-    }
-    /* Contained within animation-section height */
-    @media (max-aspect-ratio: 16/9) {
-      .sticky-canvas { height: 100%; width: auto; max-width: 100vw; }
-    }
-    @media (min-aspect-ratio: 16/9) {
-      .sticky-canvas { width: 100%; height: auto; }
-    }
-    /* The scroll-for-animation region — sticky overlay approach */
-    .anim-sticky-outer {
-      height: 500vh; /* scrollable height for frame scrubbing */
-    }
-    .anim-sticky-inner {
-      position: sticky;
-      top: var(--nav-h);
-      height: calc(100vh - var(--nav-h));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at top left,    #c0bebf 0%, transparent 60%),
-        radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
-        radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
-        #d0d0d2;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="page-body">
 
@@ -120,7 +53,7 @@
     <div class="anim-sticky-inner">
 
       <!-- Loading overlay -->
-      <div id="loadingOverlay" style="position:absolute;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at top left,#c0bebf 0%,transparent 60%),radial-gradient(ellipse at bottom right,#d6d6d8 0%,transparent 60%),radial-gradient(ellipse at bottom left,#e1e2e4 0%,transparent 60%),#d0d0d2;transition:opacity 0.6s ease;">
+      <div id="loadingOverlay">
         <div class="load-inner">
           <div class="load-label" style="font-family:var(--font-body);">Wird geladen <span id="loadPct">0%</span></div>
           <div class="load-track"><div class="load-bar" id="loadBar"></div></div>
@@ -180,9 +113,6 @@
   </div>
   <!-- /ANIMATION -->
 
-  <!-- ═══════════════════════════════════════
-       BELOW FOLD — Leistungen
-  ═══════════════════════════════════════ -->
   <div class="stripe-divider"></div>
 
   <!-- USP dark band -->
@@ -377,13 +307,11 @@
 
   <script src="animation.js"></script>
   <script>
-    // Nav scroll effect
     const nav = document.getElementById('siteNav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
 
-    // Hamburger
     const ham = document.getElementById('navHamburger');
     const drawer = document.getElementById('navDrawer');
     ham.addEventListener('click', () => {
@@ -391,7 +319,6 @@
       drawer.classList.toggle('open');
     });
 
-    // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
