@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 240" width="520" height="240">
+  <!-- Ground shadow -->
+  <ellipse cx="260" cy="228" rx="220" ry="10" fill="rgba(0,0,0,0.15)"/>
+  <!-- Van body -->
+  <rect x="30" y="60" width="380" height="150" rx="14" fill="#f0f0ee"/>
+  <rect x="30" y="60" width="380" height="150" rx="14" fill="none" stroke="#c8c8c4" stroke-width="2"/>
+  <!-- Cab section -->
+  <path d="M350,60 L410,60 Q440,60 455,80 L480,120 L480,200 L350,200 Z" fill="#e8e8e5" stroke="#c8c8c4" stroke-width="2"/>
+  <!-- Windshield -->
+  <path d="M360,68 L408,68 Q430,68 444,84 L466,118 L360,118 Z" fill="#b8d4e8" opacity="0.85" stroke="#a0b8cc" stroke-width="1.5"/>
+  <!-- Cab door line -->
+  <line x1="350" y1="68" x2="350" y2="200" stroke="#c0c0bc" stroke-width="1.5"/>
+  <!-- Rear cargo door (open) -->
+  <rect x="28" y="62" width="6" height="146" rx="3" fill="#d8d8d4" stroke="#b8b8b4" stroke-width="1"/>
+  <!-- Cargo door opening -->
+  <rect x="34" y="64" width="312" height="142" rx="8" fill="#2a2a28" stroke="#1a1a18" stroke-width="1.5"/>
+  <!-- Cargo interior floor -->
+  <rect x="34" y="174" width="312" height="32" rx="0" fill="#3a3630"/>
+  <!-- Cargo interior highlight -->
+  <rect x="44" y="70" width="295" height="8" rx="4" fill="rgba(255,255,255,0.06)"/>
+  <!-- Door hinge top -->
+  <rect x="25" y="75" width="8" height="12" rx="2" fill="#a0a09c"/>
+  <!-- Door hinge bottom -->
+  <rect x="25" y="175" width="8" height="12" rx="2" fill="#a0a09c"/>
+  <!-- Wheels -->
+  <circle cx="100" cy="210" r="26" fill="#2a2a28" stroke="#1a1a18" stroke-width="2"/>
+  <circle cx="100" cy="210" r="16" fill="#3c3c38"/>
+  <circle cx="100" cy="210" r="7" fill="#222220"/>
+  <circle cx="420" cy="210" r="26" fill="#2a2a28" stroke="#1a1a18" stroke-width="2"/>
+  <circle cx="420" cy="210" r="16" fill="#3c3c38"/>
+  <circle cx="420" cy="210" r="7" fill="#222220"/>
+  <!-- Front light -->
+  <ellipse cx="478" cy="148" rx="8" ry="6" fill="#fffde0" stroke="#d0c860" stroke-width="1"/>
+  <!-- Side mirror -->
+  <rect x="477" y="95" width="16" height="10" rx="3" fill="#d8d8d4" stroke="#b8b8b4" stroke-width="1"/>
+  <!-- Company logo area -->
+  <rect x="80" y="100" width="180" height="50" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <text x="170" y="132" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="rgba(255,255,255,0.35)" text-anchor="middle">ENTRÜMPELUNG</text>
+</svg>
