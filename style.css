@@ -1,0 +1,121 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Satoshi', system-ui, sans-serif;
+  background: #f5f3ee;
+  color: #222;
+}
+
+/* ── Sticky scroll stage ─────────────────────────────────── */
+.scroll-stage {
+  height: 500vh;
+  position: relative;
+}
+
+.sticky-canvas {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #f5f3ee;
+}
+
+/* ── Canvas ──────────────────────────────────────────────── */
+#vanCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Scroll hint ────────────────────────────────────────── */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.scroll-hint.hidden { opacity: 0; }
+.scroll-hint-arrow {
+  font-size: 1.6rem;
+  color: #888;
+  animation: bounce 1.6s ease-in-out infinite;
+}
+.scroll-hint-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* ── Progress bar ──────────────────────────────────────── */
+.progress-bar {
+  position: absolute;
+  bottom: 1.2rem;
+  right: 2rem;
+  width: 120px;
+  height: 3px;
+  background: rgba(0,0,0,.08);
+  border-radius: 2px;
+  z-index: 10;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #1a1a1a;
+  border-radius: 2px;
+  transition: width 0.08s linear;
+}
+
+/* ── Outro ─────────────────────────────────────────────── */
+.outro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #f5f3ee;
+  gap: 1rem;
+  padding: 2rem;
+}
+.outro-icon {
+  font-size: 3rem;
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.outro h2 {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.outro p {
+  font-size: 1rem;
+  color: #666;
+  max-width: 40ch;
+}
+@keyframes pop-in {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .progress-bar { right: 1rem; }
+}

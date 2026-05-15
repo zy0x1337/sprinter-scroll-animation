@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprinter Scroll Animation</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <section class="scroll-stage">
+    <div class="sticky-canvas">
+
+      <canvas id="vanCanvas"></canvas>
+
+      <!-- Scroll hint -->
+      <div class="scroll-hint" id="scrollHint">
+        <span class="scroll-hint-arrow">&#x2193;</span>
+        <span class="scroll-hint-label">Scrollen</span>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    </div>
+  </section>
+
+  <section class="outro">
+    <div class="outro-icon">🚐</div>
+    <h2>Fertig! Alles eingeladen.</h2>
+    <p>Professionelle Entrümpelung – schnell, sauber, zuverlässig.</p>
+  </section>
+
+  <script src="animation.js"></script>
+</body>
+</html>
