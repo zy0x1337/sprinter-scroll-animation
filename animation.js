@@ -17,8 +17,9 @@ const frames = [];
 let  loaded  = 0;
 
 function onAllLoaded() {
-  drawFrame(0);
+  resizeCanvas();
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', resizeCanvas);
 }
 
 for (let i = 1; i <= TOTAL_FRAMES; i++) {
@@ -39,15 +40,14 @@ for (let i = 1; i <= TOTAL_FRAMES; i++) {
 
 // ── Canvas sizing ────────────────────────────────────────
 function resizeCanvas() {
-  canvas.width  = canvas.offsetWidth  * window.devicePixelRatio;
-  canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-  const idx = currentFrameIndex();
-  if (frames[idx]?.complete) drawFrame(idx);
+  const dpr = window.devicePixelRatio || 1;
+  const w   = canvas.offsetWidth;
+  const h   = canvas.offsetHeight;
+  canvas.width  = w * dpr;
+  canvas.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawFrame(currentFrameIndex());
 }
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
 
 // ── Draw ─────────────────────────────────────────────────
 function drawFrame(index) {
@@ -55,8 +55,8 @@ function drawFrame(index) {
   if (!img?.complete || !img.naturalWidth) return;
   const cw = canvas.offsetWidth;
   const ch = canvas.offsetHeight;
-  // Cover — maintain aspect ratio, center
-  const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+  // Contain — full frame visible, letterbox if needed
+  const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
   const w = img.naturalWidth  * scale;
   const h = img.naturalHeight * scale;
   const x = (cw - w) / 2;
@@ -81,12 +81,10 @@ function onScroll() {
     hint.classList.add('hidden');
     hintHidden = true;
   }
-
   const scrollY  = window.scrollY;
   const stageH   = stage.offsetHeight;
   const vh       = window.innerHeight;
   const progress = Math.min(1, Math.max(0, scrollY / (stageH - vh)));
-
   fill.style.width = `${progress * 100}%`;
   drawFrame(currentFrameIndex());
 }
