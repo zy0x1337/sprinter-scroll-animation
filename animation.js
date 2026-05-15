@@ -1,13 +1,7 @@
 /**
  * Sprinter Scroll Animation
- * ─────────────────────────
- * Each item has:
- *   startProgress : scroll% at which the item starts flying in  (0–1)
- *   endProgress   : scroll% at which it has fully landed in van  (0–1)
- *   startX/Y      : off-screen start position (vw/vh units as fractions)
- *   endX/Y        : resting position inside the van opening
- *   startRot      : rotation at launch (deg)
- *   width         : CSS width of the element
+ * ─────────────────
+ * Van is visible immediately. Animation starts as soon as the user scrolls.
  */
 
 const ITEMS = [
@@ -61,9 +55,9 @@ const ITEMS = [
   },
 ];
 
-// Cache DOM refs
 const stage        = document.querySelector('.scroll-stage');
 const progressFill = document.getElementById('progressFill');
+const scrollHint   = document.getElementById('scrollHint');
 const itemEls      = {};
 
 ITEMS.forEach(cfg => {
@@ -72,44 +66,43 @@ ITEMS.forEach(cfg => {
   itemEls[cfg.id] = el;
 });
 
-// ── Easing ──────────────────────────────────────────────
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
-
 function lerp(a, b, t) { return a + (b - a) * t; }
 
-// ── Scroll handler ───────────────────────────────────────
+let hintHidden = false;
+
 function onScroll() {
-  const stageTop    = stage.offsetTop;
-  const stageHeight = stage.offsetHeight;
   const scrollY     = window.scrollY;
   const vh          = window.innerHeight;
+  const stageHeight = stage.offsetHeight;
 
-  // progress 0 = top of sticky zone, 1 = bottom
-  const raw = (scrollY - stageTop) / (stageHeight - vh);
+  // progress: 0 = page top, 1 = end of scroll stage
+  const raw      = scrollY / (stageHeight - vh);
   const progress = Math.min(1, Math.max(0, raw));
 
-  // progress bar
+  // hide scroll hint once user starts scrolling
+  if (!hintHidden && scrollY > 20) {
+    scrollHint.classList.add('hidden');
+    hintHidden = true;
+  }
+
   progressFill.style.width = `${progress * 100}%`;
 
-  // animate each item
   ITEMS.forEach(cfg => {
-    const el = itemEls[cfg.id];
+    const el   = itemEls[cfg.id];
     const span = cfg.endProgress - cfg.startProgress;
     const local = (progress - cfg.startProgress) / span;
-    const t = easeInOutCubic(Math.min(1, Math.max(0, local)));
+    const t     = easeInOutCubic(Math.min(1, Math.max(0, local)));
 
     const vw = window.innerWidth;
-    const vh = window.innerHeight;
 
     const x   = lerp(cfg.startX * vw,  cfg.endX * vw,  t);
     const y   = lerp(cfg.startY * vh,  cfg.endY * vh,  t);
     const rot = lerp(cfg.startRot, cfg.endRot, t);
     const opacity = t < 0.02 ? 0 : Math.min(1, t * 10);
-
-    // slight arc: items come in from the right and dip into the van
-    const arcY = y + Math.sin(t * Math.PI) * -40;
+    const arcY    = y + Math.sin(t * Math.PI) * -40;
 
     el.style.transform = `translate(${x}px, ${arcY}px) rotate(${rot}deg) scale(${lerp(0.65, 1, t)})`;
     el.style.opacity   = opacity;
@@ -118,4 +111,4 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll);
-onScroll(); // initial call
+onScroll();
