@@ -1,9 +1,9 @@
 /**
- * Sprinter Scroll Animation — Frame Scrubbing v3
- * 85 frames from ezgif export → mapped to scroll progress
+ * Sprinter Scroll Animation — Frame Scrubbing
+ * 57 frames from ezgif export → mapped to scroll progress
  */
 
-const TOTAL_FRAMES = 85;
+const TOTAL_FRAMES = 57;
 const FRAME_PATH   = (n) => `assets/ezgif-frame-${String(n).padStart(3, '0')}.jpg`;
 
 const canvas  = document.getElementById('vanCanvas');
@@ -26,11 +26,14 @@ for (let i = 1; i <= TOTAL_FRAMES; i++) {
   img.src = FRAME_PATH(i);
   img.onload = () => {
     loaded++;
-    // Update loading bar while preloading
     fill.style.width = `${(loaded / TOTAL_FRAMES) * 100}%`;
     if (loaded === TOTAL_FRAMES) onAllLoaded();
   };
-  img.onerror = () => { loaded++; if (loaded === TOTAL_FRAMES) onAllLoaded(); };
+  img.onerror = () => {
+    loaded++;
+    fill.style.width = `${(loaded / TOTAL_FRAMES) * 100}%`;
+    if (loaded === TOTAL_FRAMES) onAllLoaded();
+  };
   frames.push(img);
 }
 
@@ -66,10 +69,10 @@ function drawFrame(index) {
 let hintHidden = false;
 
 function currentFrameIndex() {
-  const scrollY     = window.scrollY;
-  const stageH      = stage.offsetHeight;
-  const vh          = window.innerHeight;
-  const progress    = Math.min(1, Math.max(0, scrollY / (stageH - vh)));
+  const scrollY  = window.scrollY;
+  const stageH   = stage.offsetHeight;
+  const vh       = window.innerHeight;
+  const progress = Math.min(1, Math.max(0, scrollY / (stageH - vh)));
   return Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
 }
 
