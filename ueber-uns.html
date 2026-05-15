@@ -53,10 +53,7 @@
       letter-spacing: -0.03em;
       color: var(--text-inv);
     }
-    .hero-title em {
-      font-style: normal;
-      color: var(--accent);
-    }
+    .hero-title em { font-style: normal; color: var(--accent); }
     .hero-sub {
       font-size: clamp(0.9rem, 1.5vw, 1rem);
       color: rgba(245,244,240,0.50);
@@ -89,11 +86,7 @@
     }
 
     /* ═══════════════════════════════════════════════════
-       LEISTUNGEN — 4-col bento with grid-template-areas
-       Desktop layout:
-         [ featured (col 1-2 / row 1-2) ] [ 02 ] [ 03 ]
-         [ featured (col 1-2 / row 1-2) ] [ 04 ] [ 05 ]
-         [ 06 (col 1-2)                 ] [ cta (col 3-4) ]
+       LEISTUNGEN — 4-col bento
     ═══════════════════════════════════════════════════ */
     .leistungen-section {
       padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3.5rem);
@@ -124,7 +117,6 @@
     .lcard--c06      { grid-area: c06; }
     .lcard--cta      { grid-area: cta; }
 
-    /* ── Tablet: 2 cols, no areas ── */
     @media (max-width: 860px) {
       .leistungen-grid {
         grid-template-columns: 1fr 1fr;
@@ -137,13 +129,11 @@
       .lcard--c06, .lcard--cta { grid-area: auto; }
       .lcard--cta { grid-column: span 2; }
     }
-    /* ── Mobile: 1 col ── */
     @media (max-width: 520px) {
       .leistungen-grid { grid-template-columns: 1fr; }
       .lcard--cta { grid-column: span 1; }
     }
 
-    /* ── Base card ── */
     .lcard {
       background: var(--surface);
       padding: 2rem 1.75rem 1.75rem;
@@ -157,7 +147,6 @@
     }
     .lcard:hover { background: var(--surface-2); }
 
-    /* ── Featured (large dark) ── */
     .lcard--featured {
       background: var(--bg-dark);
       min-height: 420px;
@@ -165,7 +154,6 @@
     }
     .lcard--featured:hover { background: #232220; }
 
-    /* ── CTA cell ── */
     .lcard--cta {
       background: var(--bg-dark);
       justify-content: center;
@@ -203,11 +191,7 @@
       color: var(--text-inv);
       margin-bottom: 1.25rem;
     }
-    .lcard-cta-btns {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
+    .lcard-cta-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .lcard-cta-btn {
       display: inline-flex;
       align-items: center;
@@ -221,24 +205,15 @@
       text-decoration: none;
       white-space: nowrap;
     }
-    .lcard-cta-btn--primary {
-      background: var(--accent);
-      color: var(--accent-text);
-    }
-    .lcard-cta-btn--primary:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-    }
+    .lcard-cta-btn--primary { background: var(--accent); color: var(--accent-text); }
+    .lcard-cta-btn--primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
     .lcard-cta-btn--ghost {
       background: rgba(255,255,255,0.07);
       color: var(--text-inv);
       border: 1px solid rgba(255,255,255,0.12);
     }
-    .lcard-cta-btn--ghost:hover {
-      background: rgba(255,255,255,0.12);
-    }
+    .lcard-cta-btn--ghost:hover { background: rgba(255,255,255,0.12); }
 
-    /* ── Ghost number ── */
     .lcard-num {
       position: absolute;
       top: -0.15em;
@@ -256,11 +231,8 @@
       color: rgba(240,192,0,0.08);
       font-size: clamp(7rem, 16vw, 13rem);
     }
-    .lcard--c06 .lcard-num {
-      font-size: clamp(6rem, 13vw, 10rem);
-    }
+    .lcard--c06 .lcard-num { font-size: clamp(6rem, 13vw, 10rem); }
 
-    /* ── Tag ── */
     .lcard-tag {
       display: inline-flex;
       align-items: center;
@@ -282,7 +254,6 @@
       border-radius: 2px;
     }
 
-    /* ── Titles ── */
     .lcard-title {
       font-family: var(--font-display);
       font-weight: 600;
@@ -298,12 +269,7 @@
       font-size: clamp(1rem, 2vw, 1.25rem);
     }
 
-    /* ── Descriptions ── */
-    .lcard-desc {
-      margin-top: 0.6rem;
-      font-size: 0.84rem;
-      line-height: 1.6;
-    }
+    .lcard-desc { margin-top: 0.6rem; font-size: 0.84rem; line-height: 1.6; }
     .lcard--featured .lcard-desc {
       color: rgba(245,244,240,0.45);
       font-size: 0.9rem;
@@ -312,7 +278,6 @@
     }
     .lcard:not(.lcard--featured) .lcard-desc { color: var(--text-muted); }
 
-    /* ── Accent pill ── */
     .lcard-pill {
       display: inline-flex;
       align-items: center;
@@ -329,50 +294,178 @@
       width: fit-content;
     }
 
-    /* ── Values ── */
+    /* ═══════════════════════════════════════════════════
+       WERTE — explicit 3-col grid-template-areas
+       Layout:
+         [ disk (col 1-2) ] [ zuv ]
+         [ bes  ] [ reg  ] [ umw ]
+         [ preis (col 1-2) ] [ --- ghost ]  ← no: 6 cards = 2 rows of 3, no orphan
+       Simpler: fixed 3-col, 2 rows → 6 slots, always full.
+       Featured "Diskretion" spans col 1-2 in row 1 for visual weight.
+       Row 2: Besenrein | Regional | Umwelt
+       Row 3: Preis (spans 2) | nothing ← avoid orphan
+       Better: just 3 cols × 2 rows, no spanning → 6 cards, zero orphans.
+       With a twist: first card wide (spans 2) + 1 normal = row 1 (3 cols = 2+1)
+                     row 2: 3 normal cards = 3 cols
+       Total: 1 wide + 1 + 3 = 5 cards? No, we have 6.
+       Cleanest: 3-col, 2 rows, all equal. No orphan ever. Done.
+    ═══════════════════════════════════════════════════ */
     .values-section {
       background: var(--surface);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
+
     .values-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0;
-      background: var(--border-heavy);
-      border: 1px solid var(--border-heavy);
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "vfeat vfeat v02"
+        "v03   v04   v05";
+      gap: 2px;
+      background: rgba(0,0,0,0.10);
       border-radius: var(--radius-lg);
       overflow: hidden;
       margin-top: 2.5rem;
     }
-    .value-card {
+
+    /* Fairer Preis gets its own full-width bottom row — making 7th slot */
+    /* Better: 6 cards, layout:
+         vfeat vfeat v02   (row 1: wide Diskretion + Zuverlässigkeit)
+         v03   v04   v05   (row 2: Besenrein, Regional, Umwelt)
+         vwide vwide vwide (row 3: Fairer Preis full-width accent strip)
+    */
+    .values-grid {
+      grid-template-areas:
+        "vfeat vfeat v02"
+        "v03   v04   v05"
+        "vbot  vbot  vbot";
+      grid-template-rows: auto auto auto;
+    }
+
+    .vcard--feat  { grid-area: vfeat; }
+    .vcard--v02   { grid-area: v02; }
+    .vcard--v03   { grid-area: v03; }
+    .vcard--v04   { grid-area: v04; }
+    .vcard--v05   { grid-area: v05; }
+    .vcard--vbot  { grid-area: vbot; }
+
+    @media (max-width: 760px) {
+      .values-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: none;
+        grid-template-areas: none;
+      }
+      .vcard--feat, .vcard--v02, .vcard--v03,
+      .vcard--v04, .vcard--v05, .vcard--vbot { grid-area: auto; }
+      .vcard--vbot { grid-column: span 2; }
+    }
+    @media (max-width: 480px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .vcard--vbot { grid-column: span 1; }
+    }
+
+    /* Base value card */
+    .vcard {
       background: var(--surface);
-      padding: 2rem 1.75rem;
-      transition: background 0.2s ease;
-    }
-    .value-card:hover { background: var(--surface-2); }
-    .value-card-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--accent);
-      border-radius: var(--radius-sm);
+      padding: 1.75rem;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .value-card-icon svg { width: 20px; height: 20px; }
-    .value-card-title {
+    .vcard:hover { background: var(--surface-2); }
+
+    /* Featured wide card */
+    .vcard--feat {
+      background: var(--bg-dark);
+      padding: 2.25rem 2rem;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+    .vcard--feat:hover { background: #232220; }
+    .vcard--feat-body { flex: 1; }
+
+    /* Bottom strip — accent bar */
+    .vcard--vbot {
+      background: var(--accent);
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .vcard--vbot:hover { background: var(--accent-dark, #c9a100); }
+    .vcard--vbot .vcard-title { color: var(--accent-text); font-size: 1rem; margin: 0; }
+    .vcard--vbot .vcard-desc  { color: rgba(0,0,0,0.55); font-size: 0.84rem; margin: 0; max-width: 52ch; }
+
+    /* Icon — no yellow square, just bare icon with accent color */
+    .vcard-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-bottom: 0.25rem;
+    }
+    .vcard-icon svg { width: 100%; height: 100%; }
+    .vcard--feat .vcard-icon {
+      width: 48px;
+      height: 48px;
+      color: rgba(240,192,0,0.6);
+      align-self: flex-start;
+      margin-bottom: 0;
+    }
+    .vcard--vbot .vcard-icon {
+      color: rgba(0,0,0,0.45);
+      width: 28px;
+      height: 28px;
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    /* Ghost number in featured */
+    .vcard--feat .vcard-ghost {
+      position: absolute;
+      right: -0.1em;
+      bottom: -0.2em;
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 12vw, 9rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: rgba(240,192,0,0.06);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .vcard-title {
       font-family: var(--font-display);
       font-size: 1rem;
       font-weight: 600;
       letter-spacing: -0.01em;
-      margin-bottom: 0.45rem;
+      color: var(--text);
+      line-height: 1.2;
     }
-    .value-card-desc {
-      font-size: 0.85rem;
+    .vcard--feat .vcard-title {
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      color: var(--text-inv);
+      letter-spacing: -0.025em;
+    }
+
+    .vcard-desc {
+      font-size: 0.84rem;
       color: var(--text-muted);
-      line-height: 1.55;
+      line-height: 1.58;
+    }
+    .vcard--feat .vcard-desc {
+      color: rgba(245,244,240,0.45);
+      font-size: 0.88rem;
+      max-width: 40ch;
     }
 
     /* ── Areas ── */
@@ -444,10 +537,7 @@
       white-space: nowrap;
       transition: background 0.18s ease, transform 0.18s ease;
     }
-    .partner-link:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-    }
+    .partner-link:hover { background: var(--accent-dark); transform: translateY(-1px); }
 
     /* ── Contact info ── */
     .contact-info-band {
@@ -460,11 +550,7 @@
       gap: 2rem;
       margin-top: 2rem;
     }
-    .contact-info-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
+    .contact-info-item { display: flex; flex-direction: column; gap: 0.3rem; }
     .contact-info-label {
       font-size: 0.72rem;
       font-weight: 700;
@@ -537,16 +623,13 @@
 
   <div class="stripe-divider"></div>
 
-  <!-- ═══════════════════════════════════
-       LEISTUNGEN — 4-col bento
-  ═══════════════════════════════════ -->
+  <!-- LEISTUNGEN -->
   <div class="leistungen-section">
     <p class="eyebrow reveal">Was wir anbieten</p>
     <h2 class="section-heading reveal reveal-delay-1">Unsere Leistungen</h2>
 
     <div class="leistungen-grid">
 
-      <!-- 01 Featured -->
       <div class="lcard lcard--featured reveal">
         <span class="lcard-num">01</span>
         <span class="lcard-tag">Kernleistung</span>
@@ -558,7 +641,6 @@
         </span>
       </div>
 
-      <!-- 02 -->
       <div class="lcard lcard--c02 reveal">
         <span class="lcard-num">02</span>
         <span class="lcard-tag">Kleinaufträge</span>
@@ -566,7 +648,6 @@
         <p class="lcard-desc">Keller, Garage, Gartenhaus, Schuppen — auch Einzelobjekte werden fachgerecht entsorgt.</p>
       </div>
 
-      <!-- 03 -->
       <div class="lcard lcard--c03 reveal reveal-delay-1">
         <span class="lcard-num">03</span>
         <span class="lcard-tag">Außenbereiche</span>
@@ -574,7 +655,6 @@
         <p class="lcard-desc">Balkon, Schrebergarten, Wintergarten, Gartenhaus — vollständig geräumt und entsorgt.</p>
       </div>
 
-      <!-- 04 -->
       <div class="lcard lcard--c04 reveal reveal-delay-1">
         <span class="lcard-num">04</span>
         <span class="lcard-tag">Schwierige Fälle</span>
@@ -582,7 +662,6 @@
         <p class="lcard-desc">Diskret, ohne Wertung. Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem.</p>
       </div>
 
-      <!-- 05 -->
       <div class="lcard lcard--c05 reveal reveal-delay-2">
         <span class="lcard-num">05</span>
         <span class="lcard-tag">Kostenvorteil</span>
@@ -590,7 +669,6 @@
         <p class="lcard-desc">Noch verwertbare Möbel reduzieren Ihre Kosten direkt beim Angebot.</p>
       </div>
 
-      <!-- 06 — spans left 2 cols in row 3 -->
       <div class="lcard lcard--c06 reveal">
         <span class="lcard-num">06</span>
         <span class="lcard-tag">Fernauftrag</span>
@@ -598,7 +676,6 @@
         <p class="lcard-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel und geben nach der Räumung zurück.</p>
       </div>
 
-      <!-- CTA cell — spans right 2 cols in row 3 -->
       <div class="lcard lcard--cta reveal reveal-delay-1">
         <span class="lcard-cta-label">Kostenlos &amp; unverbindlich</span>
         <p class="lcard-cta-title">Jetzt Besichtigung<br>vereinbaren</p>
@@ -616,59 +693,76 @@
     </div>
   </div>
 
-  <!-- Values -->
+  <!-- ═══════════════════════════════════
+       WERTE — 3-col bento, explicit areas
+       Row 1: [Diskretion wide] [Zuverlässigkeit]
+       Row 2: [Besenrein] [Regional] [Umwelt]
+       Row 3: [Fairer Preis — full-width accent strip]
+  ═══════════════════════════════════ -->
   <div class="values-section">
     <div class="section">
       <p class="eyebrow reveal">Unsere Werte</p>
       <h2 class="section-heading reveal reveal-delay-1">Was uns antreibt</h2>
+
       <div class="values-grid">
 
-        <div class="value-card reveal">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <!-- Diskretion — featured wide -->
+        <div class="vcard vcard--feat reveal">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <div class="value-card-title">Diskretion</div>
-          <div class="value-card-desc">Jeder Auftrag wird vertraulich behandelt — egal ob Erbschaftsauflösung oder schwieriger Fall.</div>
+          <div class="vcard--feat-body">
+            <div class="vcard-title">Diskretion</div>
+            <div class="vcard-desc">Jeder Auftrag wird vertraulich behandelt — egal ob Erbschaftsauflösung, Messie-Wohnung oder schwieriger Sonderfall. Was bei uns bleibt, bleibt bei uns.</div>
+          </div>
+          <span class="vcard-ghost">01</span>
         </div>
 
-        <div class="value-card reveal reveal-delay-1">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <!-- Zuverlässigkeit -->
+        <div class="vcard vcard--v02 reveal reveal-delay-1">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          <div class="value-card-title">Zuverlässigkeit</div>
-          <div class="value-card-desc">Wir kommen zum vereinbarten Termin — und melden uns innerhalb von 24 Stunden nach Ihrer Anfrage.</div>
+          <div class="vcard-title">Zuverlässigkeit</div>
+          <div class="vcard-desc">Wir kommen zum vereinbarten Termin und melden uns innerhalb von 24 Stunden nach Ihrer Anfrage.</div>
         </div>
 
-        <div class="value-card reveal reveal-delay-2">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <!-- Besenrein -->
+        <div class="vcard vcard--v03 reveal">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <div class="value-card-title">Besenrein</div>
-          <div class="value-card-desc">Wir verlassen das Objekt so, wie der nächste Nutzer es vorfindet — sauber, geräumt, übergabebereit.</div>
+          <div class="vcard-title">Besenrein</div>
+          <div class="vcard-desc">Wir verlassen das Objekt sauber, geräumt und übergabebereit — so, wie der nächste Nutzer es erwartet.</div>
         </div>
 
-        <div class="value-card reveal reveal-delay-3">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <!-- Regional -->
+        <div class="vcard vcard--v04 reveal reveal-delay-1">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
-          <div class="value-card-title">Regional verwurzelt</div>
-          <div class="value-card-desc">Wir kennen die Region — Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. und alle umliegenden Orte.</div>
+          <div class="vcard-title">Regional verwurzelt</div>
+          <div class="vcard-desc">Wunstorf, Hannover, Garbsen, Neustadt a. Rbge. — wir kennen die Region und sind schnell vor Ort.</div>
         </div>
 
-        <div class="value-card reveal">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        <!-- Umweltbewusst -->
+        <div class="vcard vcard--v05 reveal reveal-delay-2">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
           </div>
-          <div class="value-card-title">Umweltbewusst</div>
-          <div class="value-card-desc">Verwertbares bleibt im Kreislauf — Deponie ist die letzte Option.</div>
+          <div class="vcard-title">Umweltbewusst</div>
+          <div class="vcard-desc">Verwertbares bleibt im Kreislauf. Die Deponie ist für uns die letzte Option, nicht die erste.</div>
         </div>
 
-        <div class="value-card reveal reveal-delay-1">
-          <div class="value-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#151412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <!-- Fairer Preis — full-width accent strip -->
+        <div class="vcard vcard--vbot reveal">
+          <div class="vcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <div class="value-card-title">Fairer Preis</div>
-          <div class="value-card-desc">Kostenlose Besichtigung, transparentes Angebot — ohne versteckte Kosten.</div>
+          <div>
+            <div class="vcard-title">Fairer Preis</div>
+            <div class="vcard-desc">Kostenlose Besichtigung, transparentes Festpreisangebot — ohne versteckte Kosten oder Nachforderungen.</div>
+          </div>
         </div>
 
       </div>
