@@ -55,83 +55,58 @@
 
 /* ── Sticky inner frame ───────────────────────────────────── */
 /*
- * KEY FIX: no fixed height on the container.
- * The sticky-canvas drives its own size via aspect-ratio.
- * sticky-inner just sticks and centres — background matches
- * var(--bg-dark) so zero grey bleeds outside the canvas.
+ * Height must be explicit for position:sticky to work correctly
+ * and for children with height:100% to resolve.
+ * Background matches outer dark bg — if any sliver shows, it’s dark not grey.
  */
 .anim-sticky-inner {
   position: sticky;
   top: var(--nav-h);
-  /* height = whatever the canvas needs, never more */
-  height: auto;
+  height: calc(100vh - var(--nav-h));
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   overflow: hidden;
-  /* matches outer dark bg — no visible gap ever */
   background: var(--bg-dark);
 }
 
-/* ── Stage ────────────────────────────────────────────────── */
-.scroll-stage {
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/*
- * sticky-canvas: width-first sizing.
- * On landscape/desktop: fill viewport width, height auto via aspect-ratio.
- * On portrait/mobile:   cap height to 56vw (keeps 16:9 proportional,
- *                        fills ~80 % of screen width nicely).
- * max-height prevents the canvas from going taller than the viewport.
- */
-.sticky-canvas {
-  position: relative;
-  width: 100%;
-  max-width: 1280px;
-  /* aspect-ratio drives height — no orphan grey above/below */
-  aspect-ratio: 16 / 9;
-  max-height: calc(100vh - var(--nav-h));
-  background:
-    radial-gradient(ellipse at top left,     #c0bebf 0%, transparent 60%),
-    radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
-    radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
-    #d0d0d2;
-  container-type: size;
-  /* Vignette lives here — covers only the canvas, not the outer dark strip */
-  overflow: hidden;
-}
-
-/*
- * Vignette: moved from ::before on anim-sticky-inner
- * to ::before on sticky-canvas so it clips to the image edges exactly.
- */
-.sticky-canvas::before {
+/* Vignette on sticky-inner: covers only visible viewport area */
+.anim-sticky-inner::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 20;
   pointer-events: none;
   background:
-    linear-gradient(to bottom,  rgba(21,20,18,0.52) 0%,  transparent 20%),
-    linear-gradient(to top,     rgba(21,20,18,0.68) 0%,  transparent 24%),
-    linear-gradient(to right,   rgba(21,20,18,0.25) 0%,  transparent 14%),
-    linear-gradient(to left,    rgba(21,20,18,0.25) 0%,  transparent 14%);
+    linear-gradient(to bottom, rgba(21,20,18,0.52) 0%,  transparent 18%),
+    linear-gradient(to top,    rgba(21,20,18,0.68) 0%,  transparent 22%),
+    linear-gradient(to right,  rgba(21,20,18,0.22) 0%,  transparent 12%),
+    linear-gradient(to left,   rgba(21,20,18,0.22) 0%,  transparent 12%);
 }
 
-/* Portrait / narrow viewports: make canvas fill most of the width
-   and let height shrink accordingly — no wasted grey space */
-@media (max-width: 768px) {
-  .sticky-canvas {
-    width: 100%;
-    /* height is still driven by aspect-ratio: 16/9
-       but capped so it never exceeds the viewport */
-    max-height: calc(100vh - var(--nav-h));
-  }
+/* ── Stage ───────────────────────────────────────────────── */
+.scroll-stage {
+  width: 100%;
+  height: 100%;   /* resolves because sticky-inner has explicit height */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+ * sticky-canvas: fills 100% of the stage.
+ * No aspect-ratio here — height is driven by the parent (100vh - navH).
+ * drawFrame uses cover-mode (Math.max) so the image fills edge-to-edge
+ * and the grey frame borders of the source JPEGs are cropped away.
+ */
+.sticky-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  container-type: size;
+  overflow: hidden;
 }
 
 #vanCanvas {

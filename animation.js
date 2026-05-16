@@ -24,7 +24,7 @@ const SCENES = [
   { start: 81, end: 85, id: 'scene-5' },
 ];
 
-// ── Preload ────────────────────────────────────────────────────
+// ── Preload ──────────────────────────────────────────────
 const frames = [];
 let loaded = 0;
 
@@ -58,61 +58,55 @@ function updateLoadUI() {
   if (fill) fill.style.width = `${pct * 100}%`;
 }
 
-// ── Canvas sizing ───────────────────────────────────────────────
+// ── Canvas sizing ──────────────────────────────────────────
 function resizeCanvas() {
   const dpr  = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth;
   const cssH = canvas.offsetHeight;
-  const physW = Math.min(Math.round(cssW * dpr), NATIVE_W);
-  const physH = Math.min(Math.round(cssH * dpr), NATIVE_H);
+  const physW = Math.min(Math.round(cssW * dpr), NATIVE_W * 2);
+  const physH = Math.min(Math.round(cssH * dpr), NATIVE_H * 2);
   canvas.width  = physW;
   canvas.height = physH;
   ctx.setTransform(physW / cssW, 0, 0, physH / cssH, 0, 0);
   drawFrame(currentFrameIndex());
 }
 
-// ── Draw ─────────────────────────────────────────────────────────
+// ── Draw — COVER mode ───────────────────────────────────────
+/*
+ * Math.max instead of Math.min → image always fills the full canvas.
+ * On portrait viewports the top/bottom of the frame are cropped,
+ * which removes the grey studio background at the image edges.
+ */
 function drawFrame(index) {
   const img = frames[Math.max(0, Math.min(index, frames.length - 1))];
   if (!img?.complete || !img.naturalWidth) return;
   const cw = canvas.offsetWidth;
   const ch = canvas.offsetHeight;
-  const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+  // COVER: scale so the image fills the canvas completely
+  const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
   const w = img.naturalWidth  * scale;
   const h = img.naturalHeight * scale;
+  // Centre the (possibly overflowing) image
   ctx.clearRect(0, 0, cw, ch);
   ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
 }
 
-// ── Get nav height reliably ──────────────────────────────────────
+// ── Get nav height reliably ──────────────────────────────────
 function getNavH() {
   const nav = document.getElementById('siteNav');
   if (nav) return nav.offsetHeight;
-  // fallback: parse CSS variable
   const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-h').trim();
   return parseInt(raw) || 64;
 }
 
-// ── Scroll Progress from DOM ──────────────────────────────────
-//
-// The outer .anim-sticky-outer defines the total scrollable height (500vh).
-// The sticky inner sticks from top: navH with height: (100vh - navH).
-//
-// When scrollY = 0:          outer.getBoundingClientRect().top = navH  (just below nav)
-// When animation ends:        outer.top = -(outerH - vh)             (outer bottom at viewport bottom)
-//
-// trackLen = total scroll distance = outerH - vh
-// scrolled  = -(rect.top - navH)   = how far past the start we've gone
-//
+// ── Scroll Progress from DOM ──────────────────────────────
 function getScrollProgress() {
   const outer = document.getElementById('animOuter');
   if (!outer) return 0;
   const rect    = outer.getBoundingClientRect();
   const navH    = getNavH();
   const vh      = window.innerHeight;
-  // Total scrollable distance through this section
   const trackLen = outer.offsetHeight - vh;
-  // How far we've scrolled into it (rect.top starts at navH when at top of page)
   const scrolled = navH - rect.top;
   return Math.max(0, Math.min(1, scrolled / Math.max(1, trackLen)));
 }
@@ -122,7 +116,7 @@ function currentFrameIndex() {
   return Math.min(TOTAL_FRAMES - 1, Math.floor(p * TOTAL_FRAMES));
 }
 
-// ── Overlay logic ──────────────────────────────────────────────────
+// ── Overlay logic ────────────────────────────────────────────
 function updateOverlays(frameIndex) {
   const frame1 = frameIndex + 1;
   let activeScene = null;
@@ -138,7 +132,7 @@ function updateOverlays(frameIndex) {
   if (cta) cta.classList.toggle('visible', !!(activeScene && activeScene.id === 'scene-5'));
 }
 
-// ── Main scroll handler ────────────────────────────────────────────
+// ── Main scroll handler ──────────────────────────────────────
 let ticking = false;
 function onScroll() {
   if (ticking) return;
@@ -150,7 +144,6 @@ function onScroll() {
     const fi = currentFrameIndex();
     drawFrame(fi);
     updateOverlays(fi);
-    // Hide scroll hint once user starts scrolling
     if (hint && p > 0.01) hint.classList.add('hidden');
   });
 }
