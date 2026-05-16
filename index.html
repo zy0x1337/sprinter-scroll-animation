@@ -9,6 +9,222 @@
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="site.css" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ═══════════════════════════════════════════════════
+       LEISTUNGEN — 4-col bento mit grid-template-areas
+       Desktop:
+         [ feat feat  c02  c03 ]
+         [ feat feat  c04  c05 ]
+         [ c06  c07   cta  cta ]
+    ═══════════════════════════════════════════════════ */
+    .leistungen-section {
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3.5rem);
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .leistungen-section .section-heading { margin-top: 0.5rem; }
+    .leistungen-section .body-text { margin-top: 0.75rem; margin-bottom: 0; }
+
+    .leistungen-grid {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr auto;
+      grid-template-areas:
+        "feat feat c02 c03"
+        "feat feat c04 c05"
+        "c06  c07  cta cta";
+      gap: 2px;
+      background: rgba(0,0,0,0.13);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .lcard--featured { grid-area: feat; }
+    .lcard--c02      { grid-area: c02; }
+    .lcard--c03      { grid-area: c03; }
+    .lcard--c04      { grid-area: c04; }
+    .lcard--c05      { grid-area: c05; }
+    .lcard--c06      { grid-area: c06; }
+    .lcard--c07      { grid-area: c07; }
+    .lcard--cta      { grid-area: cta; }
+
+    @media (max-width: 860px) {
+      .leistungen-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: none;
+        grid-template-areas: none;
+      }
+      .lcard--featured, .lcard--c02, .lcard--c03,
+      .lcard--c04, .lcard--c05, .lcard--c06,
+      .lcard--c07, .lcard--cta { grid-area: auto; }
+      .lcard--cta { grid-column: span 2; }
+    }
+    @media (max-width: 520px) {
+      .leistungen-grid { grid-template-columns: 1fr; }
+      .lcard--cta { grid-column: span 1; }
+    }
+
+    .lcard {
+      background: var(--surface);
+      padding: 2rem 1.75rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 190px;
+      transition: background 0.22s ease;
+    }
+    .lcard:hover { background: var(--surface-2); }
+
+    .lcard--featured {
+      background: var(--bg-dark);
+      min-height: 400px;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .lcard--featured:hover { background: #232220; }
+
+    .lcard--cta {
+      background: var(--bg-dark);
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 2.25rem 2rem;
+      min-height: 0;
+    }
+    .lcard--cta:hover { background: #1e1d1b; }
+
+    .lcard-cta-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(240,192,0,0.55);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .lcard-cta-label::before {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+    .lcard-cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-inv);
+      margin-bottom: 1.25rem;
+    }
+    .lcard-cta-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .lcard-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-sm);
+      transition: background 0.18s ease, transform 0.18s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .lcard-cta-btn--primary { background: var(--accent); color: var(--accent-text); }
+    .lcard-cta-btn--primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .lcard-cta-btn--ghost {
+      background: rgba(255,255,255,0.07);
+      color: var(--text-inv);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .lcard-cta-btn--ghost:hover { background: rgba(255,255,255,0.12); }
+
+    .lcard-num {
+      position: absolute;
+      top: -0.15em;
+      right: 0.15em;
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 10vw, 8rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: rgba(0,0,0,0.055);
+      pointer-events: none;
+      user-select: none;
+    }
+    .lcard--featured .lcard-num {
+      color: rgba(240,192,0,0.08);
+      font-size: clamp(7rem, 16vw, 13rem);
+    }
+
+    .lcard-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 0.75rem;
+    }
+    .lcard--featured .lcard-tag { color: rgba(240,192,0,0.55); }
+    .lcard-tag::before {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    .lcard-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text);
+    }
+    .lcard--featured .lcard-title {
+      color: var(--text-inv);
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    }
+    .lcard:not(.lcard--featured):not(.lcard--cta) .lcard-title {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+    }
+
+    .lcard-desc { margin-top: 0.5rem; font-size: 0.84rem; line-height: 1.58; }
+    .lcard--featured .lcard-desc {
+      color: rgba(245,244,240,0.45);
+      font-size: 0.9rem;
+      max-width: 36ch;
+      margin-top: 0.8rem;
+    }
+    .lcard:not(.lcard--featured) .lcard-desc { color: var(--text-muted); }
+
+    .lcard-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--accent);
+      color: var(--accent-text);
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius-full);
+      margin-top: 1.75rem;
+      letter-spacing: 0.02em;
+      width: fit-content;
+    }
+  </style>
 </head>
 <body class="page-body">
 
@@ -47,12 +263,11 @@
   </div>
 
   <!-- ═══════════════════════════════════════
-       ANIMATION SECTION — sticky frame scrub
+       ANIMATION SECTION
   ═══════════════════════════════════════ -->
   <div class="anim-sticky-outer" id="animOuter">
     <div class="anim-sticky-inner">
 
-      <!-- Loading overlay -->
       <div id="loadingOverlay">
         <div class="load-inner">
           <div class="load-label" style="font-family:var(--font-body);">Wird geladen <span id="loadPct">0%</span></div>
@@ -64,31 +279,22 @@
         <div class="sticky-canvas">
           <canvas id="vanCanvas"></canvas>
 
-          <!-- Scene 1: Frames 1–15 -->
           <div class="scene-overlay scene-left" id="scene-1">
             <span class="scene-label">Wunstorf & Umgebung</span>
             <h2 class="scene-headline">Schnell.<br>Diskret.<br>Besenrein.</h2>
           </div>
-
-          <!-- Scene 2: Frames 20–38 -->
           <div class="scene-overlay scene-right" id="scene-2">
             <span class="scene-label">Zertifizierte Entsorgung</span>
             <h2 class="scene-headline">Kein Objekt<br>zu groß.</h2>
           </div>
-
-          <!-- Scene 3: Frames 42–60 -->
           <div class="scene-overlay scene-left" id="scene-3">
             <span class="scene-label">Wertausgleich möglich</span>
             <h2 class="scene-headline">Was noch gut<br>ist, bleibt im<br>Kreislauf.</h2>
           </div>
-
-          <!-- Scene 4: Frames 64–80 -->
           <div class="scene-overlay scene-right" id="scene-4">
             <span class="scene-label">Schlüsselübergabe-Service</span>
             <h2 class="scene-headline">Sie müssen<br>nicht dabei<br>sein.</h2>
           </div>
-
-          <!-- Scene 5 + CTA: Frames 81–85 -->
           <div class="scene-overlay scene-center" id="scene-5">
             <span class="scene-label">Kostenlose Besichtigung</span>
             <h2 class="scene-headline">Ihr Auftrag.<br>Unsere Arbeit.</h2>
@@ -97,13 +303,10 @@
             </div>
           </div>
 
-          <!-- Scroll hint -->
           <div class="scroll-hint" id="scrollHint">
             <span class="scroll-hint-arrow">&#x2193;</span>
             <span class="scroll-hint-label">Scrollen</span>
           </div>
-
-          <!-- Progress bar -->
           <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
           </div>
@@ -111,7 +314,6 @@
       </section>
     </div>
   </div>
-  <!-- /ANIMATION -->
 
   <div class="stripe-divider"></div>
 
@@ -137,8 +339,13 @@
     </div>
   </div>
 
-  <!-- Leistungen -->
-  <div class="section">
+  <!-- ═══════════════════════════════════════
+       LEISTUNGEN — Bento Grid
+       Row 1: [ Wohnungsauflösung (feat, 2×2) ] [ Haushaltsaufl. ] [ Entrümpelung ]
+       Row 2: [ Wohnungsauflösung (feat, 2×2) ] [ Schw. Fälle   ] [ Wertausgleich ]
+       Row 3: [ Schlüssel-Service ] [ Zert. Entsorgung ] [ CTA (span 2) ]
+  ═══════════════════════════════════════ -->
+  <div class="leistungen-section">
     <p class="eyebrow reveal">Was wir anbieten</p>
     <h2 class="section-heading reveal reveal-delay-1">Professionelle Entrümpelung<br>aus einer Hand</h2>
     <p class="body-text reveal reveal-delay-2" style="margin-top:1rem;">
@@ -146,95 +353,76 @@
       wir hinterlassen jeden Ort <strong>besenrein</strong> und kümmern uns um die fachgerechte Entsorgung.
     </p>
 
-    <div class="service-grid">
-      <div class="service-item reveal">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Wohnungsauflösung</div>
-          <div class="service-desc">Komplett-Räumung inkl. Besenreinigung — egal ob Mietwohnung oder Eigentum.</div>
+    <div class="leistungen-grid">
+
+      <!-- Featured: Wohnungsauflösung -->
+      <div class="lcard lcard--featured reveal">
+        <span class="lcard-num">01</span>
+        <span class="lcard-tag">Kernleistung</span>
+        <h3 class="lcard-title">Wohnungs&shy;auflösung &amp; Haushalts&shy;auflösung</h3>
+        <p class="lcard-desc">Komplette Räumung von Wohnungen, Häusern und Resthöfen — inklusive Keller, Dachboden und Nebenräumen. Wir übergeben besenrein.</p>
+        <span class="lcard-pill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Besenrein übergeben
+        </span>
+      </div>
+
+      <div class="lcard lcard--c02 reveal">
+        <span class="lcard-num">02</span>
+        <span class="lcard-tag">Kleinaufträge</span>
+        <h3 class="lcard-title">Entrümpelung</h3>
+        <p class="lcard-desc">Keller, Garage, Gartenhaus, Schuppen — auch Einzelobjekte werden fachgerecht entsorgt.</p>
+      </div>
+
+      <div class="lcard lcard--c03 reveal reveal-delay-1">
+        <span class="lcard-num">03</span>
+        <span class="lcard-tag">Außenbereiche</span>
+        <h3 class="lcard-title">Garten &amp; Terrasse</h3>
+        <p class="lcard-desc">Balkon, Schrebergarten, Wintergarten, Gartenhaus — vollständig geräumt und entsorgt.</p>
+      </div>
+
+      <div class="lcard lcard--c04 reveal reveal-delay-1">
+        <span class="lcard-num">04</span>
+        <span class="lcard-tag">Schwierige Fälle</span>
+        <h3 class="lcard-title">Messie &amp; Sonderfälle</h3>
+        <p class="lcard-desc">Diskret, ohne Wertung. Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem.</p>
+      </div>
+
+      <div class="lcard lcard--c05 reveal reveal-delay-2">
+        <span class="lcard-num">05</span>
+        <span class="lcard-tag">Kostenvorteil</span>
+        <h3 class="lcard-title">Wertausgleich</h3>
+        <p class="lcard-desc">Noch verwertbare Möbel reduzieren Ihre Kosten direkt beim Angebot.</p>
+      </div>
+
+      <div class="lcard lcard--c06 reveal">
+        <span class="lcard-num">06</span>
+        <span class="lcard-tag">Fernauftrag</span>
+        <h3 class="lcard-title">Schlüssel&shy;übergabe-Service</h3>
+        <p class="lcard-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel und geben nach der Räumung zurück.</p>
+      </div>
+
+      <div class="lcard lcard--c07 reveal reveal-delay-1">
+        <span class="lcard-num">07</span>
+        <span class="lcard-tag">Zertifiziert</span>
+        <h3 class="lcard-title">Zertifizierte Entsorgung</h3>
+        <p class="lcard-desc">Zusammenarbeit mit geprüften Entsorgungsfachbetrieben und Kill-Tec Schädlingsbekämpfung.</p>
+      </div>
+
+      <div class="lcard lcard--cta reveal reveal-delay-2">
+        <span class="lcard-cta-label">Kostenlos &amp; unverbindlich</span>
+        <p class="lcard-cta-title">Jetzt Besichtigung<br>vereinbaren</p>
+        <div class="lcard-cta-btns">
+          <a href="tel:015150194741" class="lcard-cta-btn lcard-cta-btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 2.22 2 2 0 0 1 3.6.04h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0151 / 501 94 741
+          </a>
+          <a href="kontakt.html" class="lcard-cta-btn lcard-cta-btn--ghost">
+            Online anfragen &rarr;
+          </a>
         </div>
       </div>
-      <div class="service-item reveal reveal-delay-1">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Haushaltsauflösung</div>
-          <div class="service-desc">Häuser, Resthöfe, Kellerbereiche, Dachböden — vollständig geräumt.</div>
-        </div>
-      </div>
-      <div class="service-item reveal reveal-delay-2">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Entrümpelung</div>
-          <div class="service-desc">Keller, Garage, Schuppen, Gartenhaus — schnell und zügig beräumt.</div>
-        </div>
-      </div>
-      <div class="service-item reveal reveal-delay-3">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Schwierige Fälle</div>
-          <div class="service-desc">Messie-Wohnungen, Mietnomaden — wir arbeiten diskret und professionell.</div>
-        </div>
-      </div>
-      <div class="service-item reveal">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Wertausgleich</div>
-          <div class="service-desc">Noch verwertbare Möbel & Gegenstände reduzieren Ihre Kosten.</div>
-        </div>
-      </div>
-      <div class="service-item reveal reveal-delay-1">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Schlüsselübergabe-Service</div>
-          <div class="service-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel & Rückgabe.</div>
-        </div>
-      </div>
-      <div class="service-item reveal reveal-delay-2">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Altmetall & Schrottabholung</div>
-          <div class="service-desc">Fachgerechte Entsorgung von Altmetall durch zertifizierte Partner.</div>
-        </div>
-      </div>
-      <div class="service-item reveal reveal-delay-3">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="service-title">Zertifizierte Entsorgung</div>
-          <div class="service-desc">Zusammenarbeit mit geprüften Entsorgungsfachbetrieben und Kill-Tec.</div>
-        </div>
-      </div>
+
     </div>
   </div>
 
