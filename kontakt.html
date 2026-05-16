@@ -9,7 +9,14 @@
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="site.css" />
   <style>
-    body { overflow-x: hidden; overflow-y: auto; }
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+    }
+    .site-footer { margin-top: auto; }
 
     /* ── Hero band ── */
     .hero-band {
@@ -61,13 +68,16 @@
     /* ── Process steps ── */
     .process-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 0;
       background: var(--border-heavy);
       border: 1px solid var(--border-heavy);
       border-radius: var(--radius-lg);
       overflow: hidden;
       margin-top: 2.5rem;
+    }
+    @media (max-width: 640px) {
+      .process-row { grid-template-columns: 1fr; }
     }
     .process-step {
       background: var(--surface);
@@ -208,13 +218,11 @@
         <div class="reveal">
           <h2 class="section-heading" style="margin-bottom:1.75rem;">Schreiben Sie uns</h2>
 
-          <!-- Real form via formsubmit.co — replace YOUR_EMAIL with the actual email -->
           <form
             action="https://formsubmit.co/jensstiebeiner@yahoo.de"
             method="POST"
             id="contactForm"
           >
-            <!-- formsubmit config -->
             <input type="hidden" name="_subject" value="Neue Anfrage — Entrümpelung Wunstorf" />
             <input type="hidden" name="_next" value="https://sprinter-scroll-animation.vercel.app/kontakt.html?success=1" />
             <input type="hidden" name="_captcha" value="false" />
@@ -224,29 +232,24 @@
               <label class="form-label" for="name">Name *</label>
               <input class="form-input" type="text" id="name" name="name" required placeholder="Max Mustermann" />
             </div>
-
             <div class="form-group">
               <label class="form-label" for="email">E-Mail *</label>
               <input class="form-input" type="email" id="email" name="email" required placeholder="max@beispiel.de" />
             </div>
-
             <div class="form-group">
               <label class="form-label" for="tel">Telefon</label>
               <input class="form-input" type="tel" id="tel" name="telefon" placeholder="0151 / ..." />
             </div>
-
             <div class="form-group">
               <label class="form-label" for="ort">Ort / Region</label>
               <input class="form-input" type="text" id="ort" name="ort" placeholder="z.B. Wunstorf, Garbsen, ..." />
             </div>
-
             <div class="form-group">
               <label class="form-label" for="message">Ihr Anliegen *</label>
               <textarea class="form-textarea" id="message" name="nachricht" required placeholder="Bitte beschreiben Sie kurz das Objekt und was geräumt werden soll..."></textarea>
             </div>
 
             <p class="form-note">Es gilt unsere <a href="#" style="color:var(--text-muted);text-decoration:underline;">Datenschutzerklärung</a>. Mit * gekennzeichnete Felder sind Pflichtfelder.</p>
-
             <button type="submit" class="form-submit">Anfrage absenden &rarr;</button>
           </form>
 
@@ -297,7 +300,6 @@
             </div>
           </div>
 
-          <!-- OpenStreetMap embed — Wunstorf -->
           <div class="map-wrap">
             <iframe
               src="https://www.openstreetmap.org/export/embed.html?bbox=9.38%2C52.41%2C9.46%2C52.45&layer=mapnik&marker=52.4275%2C9.4217"
@@ -338,7 +340,6 @@
     );
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    // Show success message if redirected back with ?success=1
     if (new URLSearchParams(location.search).get('success') === '1') {
       document.getElementById('formSuccess').classList.add('show');
       document.getElementById('contactForm').style.display = 'none';
