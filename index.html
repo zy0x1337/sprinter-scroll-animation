@@ -192,7 +192,7 @@
       max-width: 36ch;
     }
 
-    /* “Alle Leistungen” link row */
+    /* "Alle Leistungen" link row */
     .leistungen-mehr {
       display: flex;
       align-items: center;
@@ -296,7 +296,8 @@
         </div>
       </div>
 
-      <section class="scroll-stage" style="width:100%;height:100%;">
+      <!-- inline style removed — width/height driven by style.css -->
+      <section class="scroll-stage">
         <div class="sticky-canvas">
           <canvas id="vanCanvas"></canvas>
 
@@ -336,8 +337,6 @@
     </div>
   </div>
   <!-- /ANIMATION -->
-
-  <!-- stripe-divider entfällt — USP band folgt direkt auf dark bg -->
 
   <!-- USP dark band — seamless continuation of the dark scroll area -->
   <div class="dark-band">
@@ -471,15 +470,16 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <span>&copy; 2025 Jens Stiebeiner — Wohnungsauflösungen Wunstorf</span>
+    <span>&copy; 2026 Jens Stiebeiner — Wohnungsauflösungen Wunstorf</span>
     <div class="footer-links">
-      <a href="#">Impressum</a>
-      <a href="#">Datenschutz</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
       <a href="kontakt.html">Kontakt</a>
     </div>
   </footer>
 
-  <script src="animation.js"></script>
+  <!-- defer: script parses after DOM is ready, no parser blocking -->
+  <script src="animation.js" defer></script>
   <script>
     const nav = document.getElementById('siteNav');
     window.addEventListener('scroll', () => {
