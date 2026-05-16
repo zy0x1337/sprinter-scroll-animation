@@ -53,11 +53,16 @@
   position: relative;
 }
 
+/* Mobile: reduce scroll distance — portrait phones need less travel */
+@media (max-width: 680px) {
+  .anim-sticky-outer { height: 350vh; }
+}
+
 /* ── Sticky inner frame ───────────────────────────────────── */
 /*
  * Height must be explicit for position:sticky to work correctly
  * and for children with height:100% to resolve.
- * Background matches outer dark bg — if any sliver shows, it’s dark not grey.
+ * Background matches outer dark bg — if any sliver shows, it's dark not grey.
  */
 .anim-sticky-inner {
   position: sticky;
