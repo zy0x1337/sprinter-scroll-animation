@@ -10,62 +10,109 @@
   <link rel="stylesheet" href="site.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ═══════════════════════════════════════════════════
-       LEISTUNGEN — 4-col bento mit grid-template-areas
-       Desktop:
-         [ feat feat  c02  c03 ]
-         [ feat feat  c04  c05 ]
-         [ c06  c07   cta  cta ]
-    ═══════════════════════════════════════════════════ */
+    /* ───────────────────────────────────────────────────
+       HERO INTRO — dark band above animation
+    ─────────────────────────────────────────────────── */
+    .hero-intro {
+      background: var(--bg-dark);
+      padding: clamp(3.5rem, 7vw, 6rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2rem, 4vw, 3.5rem);
+    }
+    .hero-intro-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 2rem;
+    }
+    @media (max-width: 580px) {
+      .hero-intro-inner { grid-template-columns: 1fr; }
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--accent);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      font-weight: 600;
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+      color: var(--text-inv);
+    }
+    .hero-title em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      font-size: clamp(0.88rem, 1.4vw, 1rem);
+      color: rgba(245,244,240,0.48);
+      margin-top: 1.1rem;
+      max-width: 50ch;
+      line-height: 1.65;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.4rem;
+      text-align: center;
+      white-space: nowrap;
+      align-self: center;
+      flex-shrink: 0;
+    }
+    .hero-badge-num {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .hero-badge-label {
+      font-size: 0.75rem;
+      color: rgba(245,244,240,0.38);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+
+    /* ───────────────────────────────────────────────────
+       LEISTUNGEN — 2×2 highlight grid + link
+       4 key services on homepage; full list on Über uns
+    ─────────────────────────────────────────────────── */
     .leistungen-section {
       padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3.5rem);
       max-width: 1160px;
       margin: 0 auto;
     }
-    .leistungen-section .section-heading { margin-top: 0.5rem; }
-    .leistungen-section .body-text { margin-top: 0.75rem; margin-bottom: 0; }
 
-    .leistungen-grid {
+    /* 2-col × 2-row highlight grid — no orphans ever */
+    .highlight-grid {
       margin-top: 2.5rem;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr auto;
-      grid-template-areas:
-        "feat feat c02 c03"
-        "feat feat c04 c05"
-        "c06  c07  cta cta";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
       gap: 2px;
       background: rgba(0,0,0,0.13);
       border-radius: var(--radius-xl);
       overflow: hidden;
     }
-
-    .lcard--featured { grid-area: feat; }
-    .lcard--c02      { grid-area: c02; }
-    .lcard--c03      { grid-area: c03; }
-    .lcard--c04      { grid-area: c04; }
-    .lcard--c05      { grid-area: c05; }
-    .lcard--c06      { grid-area: c06; }
-    .lcard--c07      { grid-area: c07; }
-    .lcard--cta      { grid-area: cta; }
-
-    @media (max-width: 860px) {
-      .leistungen-grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: none;
-        grid-template-areas: none;
-      }
-      .lcard--featured, .lcard--c02, .lcard--c03,
-      .lcard--c04, .lcard--c05, .lcard--c06,
-      .lcard--c07, .lcard--cta { grid-area: auto; }
-      .lcard--cta { grid-column: span 2; }
-    }
-    @media (max-width: 520px) {
-      .leistungen-grid { grid-template-columns: 1fr; }
-      .lcard--cta { grid-column: span 1; }
+    @media (max-width: 560px) {
+      .highlight-grid { grid-template-columns: 1fr; }
     }
 
-    .lcard {
+    .hcard {
       background: var(--surface);
       padding: 2rem 1.75rem 1.75rem;
       position: relative;
@@ -73,85 +120,24 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      min-height: 190px;
+      min-height: 200px;
       transition: background 0.22s ease;
     }
-    .lcard:hover { background: var(--surface-2); }
+    .hcard:hover { background: var(--surface-2); }
 
-    .lcard--featured {
+    /* first card — dark featured */
+    .hcard:first-child {
       background: var(--bg-dark);
-      min-height: 400px;
-      padding: 2.5rem 2rem 2rem;
+      min-height: 240px;
     }
-    .lcard--featured:hover { background: #232220; }
+    .hcard:first-child:hover { background: #232220; }
 
-    .lcard--cta {
-      background: var(--bg-dark);
-      justify-content: center;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 2.25rem 2rem;
-      min-height: 0;
-    }
-    .lcard--cta:hover { background: #1e1d1b; }
-
-    .lcard-cta-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(240,192,0,0.55);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 0.5rem;
-    }
-    .lcard-cta-label::before {
-      content: '';
-      display: block;
-      width: 14px;
-      height: 1.5px;
-      background: currentColor;
-      border-radius: 2px;
-    }
-    .lcard-cta-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-      font-weight: 600;
-      letter-spacing: -0.025em;
-      line-height: 1.1;
-      color: var(--text-inv);
-      margin-bottom: 1.25rem;
-    }
-    .lcard-cta-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .lcard-cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--font-display);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.6rem 1.25rem;
-      border-radius: var(--radius-sm);
-      transition: background 0.18s ease, transform 0.18s ease;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .lcard-cta-btn--primary { background: var(--accent); color: var(--accent-text); }
-    .lcard-cta-btn--primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
-    .lcard-cta-btn--ghost {
-      background: rgba(255,255,255,0.07);
-      color: var(--text-inv);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-    .lcard-cta-btn--ghost:hover { background: rgba(255,255,255,0.12); }
-
-    .lcard-num {
+    .hcard-num {
       position: absolute;
       top: -0.15em;
       right: 0.15em;
       font-family: var(--font-display);
-      font-size: clamp(5rem, 10vw, 8rem);
+      font-size: clamp(4.5rem, 9vw, 7rem);
       font-weight: 700;
       line-height: 1;
       letter-spacing: -0.04em;
@@ -159,12 +145,9 @@
       pointer-events: none;
       user-select: none;
     }
-    .lcard--featured .lcard-num {
-      color: rgba(240,192,0,0.08);
-      font-size: clamp(7rem, 16vw, 13rem);
-    }
+    .hcard:first-child .hcard-num { color: rgba(240,192,0,0.08); }
 
-    .lcard-tag {
+    .hcard-tag {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -173,57 +156,73 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text-faint);
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
     }
-    .lcard--featured .lcard-tag { color: rgba(240,192,0,0.55); }
-    .lcard-tag::before {
+    .hcard:first-child .hcard-tag { color: rgba(240,192,0,0.55); }
+    .hcard-tag::before {
       content: '';
       display: block;
-      width: 14px;
+      width: 12px;
       height: 1.5px;
       background: currentColor;
       border-radius: 2px;
     }
 
-    .lcard-title {
+    .hcard-title {
       font-family: var(--font-display);
+      font-size: clamp(1rem, 2vw, 1.3rem);
       font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.1;
       color: var(--text);
     }
-    .lcard--featured .lcard-title {
+    .hcard:first-child .hcard-title {
       color: var(--text-inv);
-      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-    }
-    .lcard:not(.lcard--featured):not(.lcard--cta) .lcard-title {
-      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-size: clamp(1.3rem, 2.8vw, 1.9rem);
     }
 
-    .lcard-desc { margin-top: 0.5rem; font-size: 0.84rem; line-height: 1.58; }
-    .lcard--featured .lcard-desc {
+    .hcard-desc {
+      margin-top: 0.5rem;
+      font-size: 0.84rem;
+      line-height: 1.58;
+      color: var(--text-muted);
+    }
+    .hcard:first-child .hcard-desc {
       color: rgba(245,244,240,0.45);
-      font-size: 0.9rem;
       max-width: 36ch;
-      margin-top: 0.8rem;
     }
-    .lcard:not(.lcard--featured) .lcard-desc { color: var(--text-muted); }
 
-    .lcard-pill {
+    /* “Alle Leistungen” link row */
+    .leistungen-mehr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .leistungen-mehr-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .leistungen-mehr-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .leistungen-mehr-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
-      background: var(--accent);
-      color: var(--accent-text);
+      gap: 0.4rem;
       font-family: var(--font-display);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 0.4rem 0.9rem;
-      border-radius: var(--radius-full);
-      margin-top: 1.75rem;
-      letter-spacing: 0.02em;
-      width: fit-content;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: gap 0.18s ease;
     }
+    .leistungen-mehr-link:hover { gap: 0.65rem; }
+    .leistungen-mehr-link svg { flex-shrink: 0; }
   </style>
 </head>
 <body class="page-body">
@@ -232,7 +231,7 @@
   <nav class="site-nav" id="siteNav">
     <a href="index.html" class="nav-logo">
       <span class="nav-logo-mark">
-        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 18 18" fill="none">
           <rect x="1" y="9" width="16" height="6" rx="1.5" fill="#151412"/>
           <rect x="1" y="5" width="10" height="5" rx="1" fill="#151412"/>
           <circle cx="4.5" cy="15.5" r="1.5" fill="#f0c000"/>
@@ -252,7 +251,6 @@
     </button>
   </nav>
 
-  <!-- Mobile drawer -->
   <div class="nav-drawer" id="navDrawer">
     <ul>
       <li><a href="index.html" class="active">Start</a></li>
@@ -262,9 +260,32 @@
     <a href="kontakt.html" class="nav-cta">Kostenlos anfragen</a>
   </div>
 
-  <!-- ═══════════════════════════════════════
-       ANIMATION SECTION
-  ═══════════════════════════════════════ -->
+  <!-- ═════════════════════════════════════
+       HERO INTRO — dark band, sits directly above animation.
+       Same bg as anim-sticky-outer so they visually merge.
+  ═════════════════════════════════════ -->
+  <div class="hero-intro">
+    <div class="hero-intro-inner">
+      <div>
+        <p class="hero-eyebrow">Wunstorf &amp; Region Hannover</p>
+        <h1 class="hero-title">Entrümpelung.<br><em>Professionell.</em></h1>
+        <p class="hero-sub">
+          Wohnungsauflösung, Haushaltsauflösung, Messie-Wohnungen —
+          besenrein übergeben, kostenlose Besichtigung, fairer Festpreis.
+        </p>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-num">10+</div>
+        <div class="hero-badge-label">Jahre<br>Erfahrung</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════
+       ANIMATION — sticky scroll section
+       anim-sticky-outer bg = var(--bg-dark) → same as hero-intro
+       so during scroll the dark area feels continuous
+  ═════════════════════════════════════ -->
   <div class="anim-sticky-outer" id="animOuter">
     <div class="anim-sticky-inner">
 
@@ -314,10 +335,11 @@
       </section>
     </div>
   </div>
+  <!-- /ANIMATION -->
 
-  <div class="stripe-divider"></div>
+  <!-- stripe-divider entfällt — USP band folgt direkt auf dark bg -->
 
-  <!-- USP dark band -->
+  <!-- USP dark band — seamless continuation of the dark scroll area -->
   <div class="dark-band">
     <div class="usp-row">
       <div class="usp-item reveal">
@@ -326,7 +348,7 @@
       </div>
       <div class="usp-item reveal reveal-delay-1">
         <div class="usp-num">40+</div>
-        <div class="usp-label">Regionen in der<br>Region Hannover</div>
+        <div class="usp-label">Einsatzgebiete in der<br>Region Hannover</div>
       </div>
       <div class="usp-item reveal reveal-delay-2">
         <div class="usp-num">10+</div>
@@ -339,90 +361,54 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════
-       LEISTUNGEN — Bento Grid
-       Row 1: [ Wohnungsauflösung (feat, 2×2) ] [ Haushaltsaufl. ] [ Entrümpelung ]
-       Row 2: [ Wohnungsauflösung (feat, 2×2) ] [ Schw. Fälle   ] [ Wertausgleich ]
-       Row 3: [ Schlüssel-Service ] [ Zert. Entsorgung ] [ CTA (span 2) ]
-  ═══════════════════════════════════════ -->
+  <!-- ═════════════════════════════════════
+       LEISTUNGEN — 4 highlights only.
+       Full list lives on Über uns — linked below.
+  ═════════════════════════════════════ -->
   <div class="leistungen-section">
     <p class="eyebrow reveal">Was wir anbieten</p>
     <h2 class="section-heading reveal reveal-delay-1">Professionelle Entrümpelung<br>aus einer Hand</h2>
-    <p class="body-text reveal reveal-delay-2" style="margin-top:1rem;">
-      Ob Haushaltsauflösung nach einem Todesfall, Mietwohnungsräumung oder große Entrümpelung —
-      wir hinterlassen jeden Ort <strong>besenrein</strong> und kümmern uns um die fachgerechte Entsorgung.
-    </p>
 
-    <div class="leistungen-grid">
+    <div class="highlight-grid">
 
-      <!-- Featured: Wohnungsauflösung -->
-      <div class="lcard lcard--featured reveal">
-        <span class="lcard-num">01</span>
-        <span class="lcard-tag">Kernleistung</span>
-        <h3 class="lcard-title">Wohnungs&shy;auflösung &amp; Haushalts&shy;auflösung</h3>
-        <p class="lcard-desc">Komplette Räumung von Wohnungen, Häusern und Resthöfen — inklusive Keller, Dachboden und Nebenräumen. Wir übergeben besenrein.</p>
-        <span class="lcard-pill">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Besenrein übergeben
-        </span>
+      <div class="hcard reveal">
+        <span class="hcard-num">01</span>
+        <span class="hcard-tag">Kernleistung</span>
+        <h3 class="hcard-title">Wohnungs- &amp; Haushaltsauflösung</h3>
+        <p class="hcard-desc">Komplette Räumung von Wohnungen, Häusern und Resthöfen — inklusive Keller, Dachboden, Nebenräume. Besenrein übergeben.</p>
       </div>
 
-      <div class="lcard lcard--c02 reveal">
-        <span class="lcard-num">02</span>
-        <span class="lcard-tag">Kleinaufträge</span>
-        <h3 class="lcard-title">Entrümpelung</h3>
-        <p class="lcard-desc">Keller, Garage, Gartenhaus, Schuppen — auch Einzelobjekte werden fachgerecht entsorgt.</p>
+      <div class="hcard reveal reveal-delay-1">
+        <span class="hcard-num">02</span>
+        <span class="hcard-tag">Schwierige Fälle</span>
+        <h3 class="hcard-title">Messie &amp; Sonderfälle</h3>
+        <p class="hcard-desc">Diskret, ohne Wertung — Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem.</p>
       </div>
 
-      <div class="lcard lcard--c03 reveal reveal-delay-1">
-        <span class="lcard-num">03</span>
-        <span class="lcard-tag">Außenbereiche</span>
-        <h3 class="lcard-title">Garten &amp; Terrasse</h3>
-        <p class="lcard-desc">Balkon, Schrebergarten, Wintergarten, Gartenhaus — vollständig geräumt und entsorgt.</p>
+      <div class="hcard reveal reveal-delay-1">
+        <span class="hcard-num">03</span>
+        <span class="hcard-tag">Kostenvorteil</span>
+        <h3 class="hcard-title">Wertausgleich</h3>
+        <p class="hcard-desc">Verwertbare Möbel & Gegenstände werden angerechnet — Ihr Angebot wird direkt günstiger.</p>
       </div>
 
-      <div class="lcard lcard--c04 reveal reveal-delay-1">
-        <span class="lcard-num">04</span>
-        <span class="lcard-tag">Schwierige Fälle</span>
-        <h3 class="lcard-title">Messie &amp; Sonderfälle</h3>
-        <p class="lcard-desc">Diskret, ohne Wertung. Messie-Wohnungen und Mietnomaden-Schäden sind kein Problem.</p>
+      <div class="hcard reveal reveal-delay-2">
+        <span class="hcard-num">04</span>
+        <span class="hcard-tag">Fernauftrag</span>
+        <h3 class="hcard-title">Schlüsselübergabe-Service</h3>
+        <p class="hcard-desc">Sie müssen nicht vor Ort sein — wir übernehmen Schlüssel und geben sie nach der Räumung zurück.</p>
       </div>
 
-      <div class="lcard lcard--c05 reveal reveal-delay-2">
-        <span class="lcard-num">05</span>
-        <span class="lcard-tag">Kostenvorteil</span>
-        <h3 class="lcard-title">Wertausgleich</h3>
-        <p class="lcard-desc">Noch verwertbare Möbel reduzieren Ihre Kosten direkt beim Angebot.</p>
-      </div>
+    </div>
 
-      <div class="lcard lcard--c06 reveal">
-        <span class="lcard-num">06</span>
-        <span class="lcard-tag">Fernauftrag</span>
-        <h3 class="lcard-title">Schlüssel&shy;übergabe-Service</h3>
-        <p class="lcard-desc">Sie wohnen weit weg? Kein Problem — wir übernehmen Schlüssel und geben nach der Räumung zurück.</p>
-      </div>
-
-      <div class="lcard lcard--c07 reveal reveal-delay-1">
-        <span class="lcard-num">07</span>
-        <span class="lcard-tag">Zertifiziert</span>
-        <h3 class="lcard-title">Zertifizierte Entsorgung</h3>
-        <p class="lcard-desc">Zusammenarbeit mit geprüften Entsorgungsfachbetrieben und Kill-Tec Schädlingsbekämpfung.</p>
-      </div>
-
-      <div class="lcard lcard--cta reveal reveal-delay-2">
-        <span class="lcard-cta-label">Kostenlos &amp; unverbindlich</span>
-        <p class="lcard-cta-title">Jetzt Besichtigung<br>vereinbaren</p>
-        <div class="lcard-cta-btns">
-          <a href="tel:015150194741" class="lcard-cta-btn lcard-cta-btn--primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 2.22 2 2 0 0 1 3.6.04h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            0151 / 501 94 741
-          </a>
-          <a href="kontakt.html" class="lcard-cta-btn lcard-cta-btn--ghost">
-            Online anfragen &rarr;
-          </a>
-        </div>
-      </div>
-
+    <div class="leistungen-mehr reveal reveal-delay-2">
+      <p class="leistungen-mehr-text">
+        Auch: <strong>Entrümpelung, Garten & Terrasse, Altmetall-Abholung, zertifizierte Entsorgung</strong>
+      </p>
+      <a href="ueber-uns.html#leistungen" class="leistungen-mehr-link">
+        Alle Leistungen ansehen
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
   </div>
 
