@@ -47,8 +47,6 @@
 }
 
 /* ── Animation outer wrapper ──────────────────────────────── */
-/* Dark bg fills the 500vh scroll space so no white bleeds
-   above/below the sticky frame while the user scrolls */
 .anim-sticky-outer {
   height: 500vh;
   background: var(--bg-dark);
@@ -56,89 +54,83 @@
 }
 
 /* ── Sticky inner frame ───────────────────────────────────── */
+/*
+ * KEY FIX: no fixed height on the container.
+ * The sticky-canvas drives its own size via aspect-ratio.
+ * sticky-inner just sticks and centres — background matches
+ * var(--bg-dark) so zero grey bleeds outside the canvas.
+ */
 .anim-sticky-inner {
   position: sticky;
   top: var(--nav-h);
-  height: calc(100vh - var(--nav-h));
+  /* height = whatever the canvas needs, never more */
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  /* matches outer dark bg — no visible gap ever */
+  background: var(--bg-dark);
+}
+
+/* ── Stage ────────────────────────────────────────────────── */
+.scroll-stage {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+ * sticky-canvas: width-first sizing.
+ * On landscape/desktop: fill viewport width, height auto via aspect-ratio.
+ * On portrait/mobile:   cap height to 56vw (keeps 16:9 proportional,
+ *                        fills ~80 % of screen width nicely).
+ * max-height prevents the canvas from going taller than the viewport.
+ */
+.sticky-canvas {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  /* aspect-ratio drives height — no orphan grey above/below */
+  aspect-ratio: 16 / 9;
+  max-height: calc(100vh - var(--nav-h));
   background:
     radial-gradient(ellipse at top left,     #c0bebf 0%, transparent 60%),
     radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
     radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
     #d0d0d2;
+  container-type: size;
+  /* Vignette lives here — covers only the canvas, not the outer dark strip */
+  overflow: hidden;
 }
 
-/* Top vignette: fades the animation frame into the dark nav area */
-.anim-sticky-inner::before {
+/*
+ * Vignette: moved from ::before on anim-sticky-inner
+ * to ::before on sticky-canvas so it clips to the image edges exactly.
+ */
+.sticky-canvas::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 20;
   pointer-events: none;
   background:
-    /* top fade → dark */
-    linear-gradient(to bottom,
-      rgba(21,20,18,0.55) 0%,
-      transparent 18%
-    ),
-    /* bottom fade → dark */
-    linear-gradient(to top,
-      rgba(21,20,18,0.72) 0%,
-      transparent 22%
-    ),
-    /* left edge */
-    linear-gradient(to right,
-      rgba(21,20,18,0.28) 0%,
-      transparent 12%
-    ),
-    /* right edge */
-    linear-gradient(to left,
-      rgba(21,20,18,0.28) 0%,
-      transparent 12%
-    );
+    linear-gradient(to bottom,  rgba(21,20,18,0.52) 0%,  transparent 20%),
+    linear-gradient(to top,     rgba(21,20,18,0.68) 0%,  transparent 24%),
+    linear-gradient(to right,   rgba(21,20,18,0.25) 0%,  transparent 14%),
+    linear-gradient(to left,    rgba(21,20,18,0.25) 0%,  transparent 14%);
 }
 
-/* ── Stage ───────────────────────────────────────────────────── */
-.scroll-stage {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sticky-canvas {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 1280px;
-  aspect-ratio: 16 / 9;
-  margin: auto;
-  background:
-    radial-gradient(ellipse at top left,     #c0bebf 0%, transparent 60%),
-    radial-gradient(ellipse at bottom right, #d6d6d8 0%, transparent 60%),
-    radial-gradient(ellipse at bottom left,  #e1e2e4 0%, transparent 60%),
-    #d0d0d2;
-  max-height: min(100vh, 720px);
-  container-type: size;
-}
-
-@media (max-aspect-ratio: 16/9) {
-  .sticky-canvas {
-    height: 100%;
-    width: auto;
-    max-width: 100vw;
-    max-height: 100%;
-  }
-}
-@media (min-aspect-ratio: 16/9) {
+/* Portrait / narrow viewports: make canvas fill most of the width
+   and let height shrink accordingly — no wasted grey space */
+@media (max-width: 768px) {
   .sticky-canvas {
     width: 100%;
-    height: auto;
+    /* height is still driven by aspect-ratio: 16/9
+       but capped so it never exceeds the viewport */
+    max-height: calc(100vh - var(--nav-h));
   }
 }
 
@@ -152,7 +144,7 @@
   image-rendering: crisp-edges;
 }
 
-/* ── Scene overlays ──────────────────────────────────────────── */
+/* ── Scene overlays ───────────────────────────────────────── */
 .scene-overlay {
   position: absolute;
   z-index: 10;
@@ -196,7 +188,7 @@
   transform: translate(-50%, -50%);
 }
 
-/* ── Typography ───────────────────────────────────────────────── */
+/* ── Typography ───────────────────────────────────────────── */
 .scene-label {
   display: block;
   font-size: clamp(0.55rem, 1.3cqw, 0.85rem);
@@ -219,7 +211,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ── CTA button ────────────────────────────────────────────────── */
+/* ── CTA button ───────────────────────────────────────────── */
 .cta-block {
   margin-top: 1.5em;
   opacity: 0;
@@ -256,7 +248,7 @@
 }
 .cta-btn:active { transform: translateY(0); }
 
-/* ── Scroll hint ───────────────────────────────────────────────── */
+/* ── Scroll hint ──────────────────────────────────────────── */
 .scroll-hint {
   position: absolute;
   bottom: 2.5cqh;
@@ -291,7 +283,7 @@
   50%       { transform: translateY(8px); }
 }
 
-/* ── Progress bar ────────────────────────────────────────────── */
+/* ── Progress bar ─────────────────────────────────────────── */
 .progress-bar {
   position: absolute;
   bottom: 1.2cqh;
